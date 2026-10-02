@@ -9,4 +9,8 @@ artifacts/
 .sites-runtime/
 .openai/
 metrics/*.private.json
+metrics/analytics.json
+metrics/search-console.json
+metrics/bing.json
+metrics/ads.json
 
