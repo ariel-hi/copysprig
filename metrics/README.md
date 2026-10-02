@@ -7,7 +7,7 @@ Default inputs are `analytics.json`, `search-console.json`, `bing.json` and `ads
 From `site`, explicit paths can be supplied instead of defaults:
 
 ```powershell
-npm run report -- --analytics metrics/analytics.json --search-console metrics/search-console.json --bing metrics/bing.json --ads metrics/ads.json
+node scripts/report.mjs --analytics metrics/analytics.json --search-console metrics/search-console.json --bing metrics/bing.json --ads metrics/ads.json
 ```
 
 Omit options for accounts that are unavailable. A requested missing file or malformed value causes a nonzero exit and a visible input issue. Each available number needs its real source, date range and timezone. Actual measured zero is valid; leave missing data `null`. Different periods remain separate and are identified in the report. Counts must be nonnegative integers; money/RPM may contain decimals. Optional `scope` describes filters, consent coverage, platform search type and estimated/finalized earnings.
