@@ -1,7 +1,7 @@
-import {STYLES,EFFECTS,FRAMES,transformText,plainText,mixText} from './unicode.mjs?v=c1e9ced1c5ed';
-import {symbols,categories} from './catalog.mjs?v=c1e9ced1c5ed';
-import {copyText} from './copy.mjs?v=c1e9ced1c5ed';
-import {filterStyles,matchesStyleFilters,filterSymbols,pickItem} from './discovery.mjs?v=c1e9ced1c5ed';
+import {STYLES,EFFECTS,FRAMES,transformText,plainText,mixText} from './unicode.mjs?v=4269a9da4587';
+import {symbols,categories} from './catalog.mjs?v=4269a9da4587';
+import {copyText} from './copy.mjs?v=4269a9da4587';
+import {filterStyles,matchesStyleFilters,filterSymbols,pickItem} from './discovery.mjs?v=4269a9da4587';
 const data = JSON.parse(document.querySelector('#page-data').textContent);
 const input = document.querySelector('#text-input');
 // Keep the example out of the editable value so the first keystroke replaces it.
@@ -145,7 +145,7 @@ function renderSymbols(){
     const footer=document.createElement('div');footer.className='symbol-footer';
     const hint=document.createElement('span');hint.textContent='Tap to copy';
     const save=document.createElement('button');save.className='save';save.type='button';save.dataset.save=`symbol:${symbol.id}`;save.dataset.name=symbol.name;save.addEventListener('click',()=>favorite(save.dataset.save));
-    footer.append(hint,save);article.append(button,footer);fragment.append(article);
+    footer.append(hint,save);article.append(button,footer);enableCardCopy(article,button);fragment.append(article);
   });
   grid.replaceChildren(fragment);
   const categoryName=categories.find(item=>item.id===category)?.label.toLowerCase();

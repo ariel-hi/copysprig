@@ -145,7 +145,7 @@ function renderSymbols(){
     const footer=document.createElement('div');footer.className='symbol-footer';
     const hint=document.createElement('span');hint.textContent='Tap to copy';
     const save=document.createElement('button');save.className='save';save.type='button';save.dataset.save=`symbol:${symbol.id}`;save.dataset.name=symbol.name;save.addEventListener('click',()=>favorite(save.dataset.save));
-    footer.append(hint,save);article.append(button,footer);fragment.append(article);
+    footer.append(hint,save);article.append(button,footer);enableCardCopy(article,button);fragment.append(article);
   });
   grid.replaceChildren(fragment);
   const categoryName=categories.find(item=>item.id===category)?.label.toLowerCase();

@@ -113,7 +113,7 @@ p { margin-bottom: 16px; }
 .results { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
 .copy-hint { margin: 0 0 10px; color: var(--muted); font-size: .78rem; }
 .result { border: 2px solid var(--ink); border-radius: 17px; background: #fff; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 8px; align-items: center; padding: 13px 15px; min-width: 0; transition: box-shadow .15s, transform .15s; }
-.result[data-copyable=true] { cursor: pointer; }
+.result[data-copyable=true], .symbol-card[data-copyable=true] { cursor: pointer; }
 .result:nth-child(6n+2) { background: #ffe2d8; }
 .result:nth-child(6n+3) { background: #eaffb0; }
 .result:nth-child(6n+4) { background: #e6dbff; }

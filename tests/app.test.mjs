@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { setImmediate as settleCopy } from 'node:timers/promises';
 import { runInNewContext } from 'node:vm';
 import * as unicode from '../src/unicode.mjs';
 import { symbols, categories } from '../src/catalog.mjs';
@@ -74,8 +75,22 @@ function environment({ mode = 'styles', category, favorites = [], hash = '', cop
       this.handlers.get(name).push(handler);
     }
     async emit(name, overrides = {}) {
-      const event = { target: this, detail: 1, ...overrides };
-      for (const handler of this.handlers.get(name) ?? []) await handler(event);
+      let stopped = false;
+      const event = {
+        target: this, detail: 1, bubbles: true, defaultPrevented: false,
+        stopPropagation() { stopped = true; },
+        preventDefault() { this.defaultPrevented = true; },
+        ...overrides,
+      };
+      // Capture the dispatch path before handlers can replace filtered cards.
+      const path = [];
+      for (let node = this; node; node = node.parentNode) path.push(node);
+      for (const node of path) {
+        event.currentTarget = node;
+        for (const handler of node.handlers.get(name) ?? []) await handler(event);
+        if (!event.bubbles || stopped) break;
+      }
+      event.currentTarget = null;
     }
     click() { if (!this.disabled) return this.emit('click'); }
     focus() { document.activeElement = this; }
@@ -385,4 +400,103 @@ test('resetting a dedicated symbol collection restores its local results without
   const glyph = env.get('#symbol-grid').querySelector('.symbol-glyph');
   await env.get('#symbol-grid').querySelector('.symbol-copy').click();
   assert.equal(env.copied.at(-1), glyph.textContent);
+});
+
+test('symbol footer, tap hint and card padding copy once and focus the named copy action', async () => {
+  const env = environment({ mode: 'symbols', category: 'heart' });
+  const card = env.get('#symbol-grid').children[0];
+  const button = card.querySelector('.symbol-copy');
+  const footer = card.querySelector('.symbol-footer');
+  assert.equal(button.getAttribute('aria-label'), 'Copy White heart');
+  for (const target of [footer, footer.children[0], card]) {
+    const previous = env.copied.length;
+    await target.emit('click');
+    await settleCopy();
+    assert.equal(env.copied.length, previous + 1, 'each surface performs one copy');
+    assert.equal(env.copied.at(-1), '♡');
+    assert.equal(env.document.activeElement, button);
+    assert.equal(button.dataset.copied, 'true');
+  }
+  assert.deepEqual(JSON.parse(env.stored.get('copysprig-recent')), ['symbol:heart-0']);
+});
+
+test('bubbling glyph, name and button clicks copy once while the symbol star only saves', async () => {
+  const env = environment({ mode: 'symbols', category: 'heart' });
+  const card = env.get('#symbol-grid').children[6];
+  const button = card.querySelector('.symbol-copy');
+  for (const target of [card.querySelector('.symbol-glyph'), card.querySelector('.symbol-name'), button]) {
+    const previous = env.copied.length;
+    await target.emit('click');
+    assert.equal(env.copied.length, previous + 1, 'bubbling cannot duplicate a copy');
+    assert.equal(env.copied.at(-1), '💗');
+  }
+  const save = card.querySelector('[data-save]');
+  await save.click();
+  assert.equal(env.copied.length, 3, 'Save does not activate the card copy handler');
+  assert.equal(save.getAttribute('aria-pressed'), 'true');
+  assert.deepEqual(JSON.parse(env.stored.get('copysprig-favorites')), ['symbol:heart-6']);
+  await save.click();
+  assert.equal(env.copied.length, 3, 'Unsave does not activate the card copy handler');
+  assert.deepEqual(JSON.parse(env.stored.get('copysprig-favorites')), []);
+});
+
+test('symbol cards leave an intersecting text selection and double-click gestures alone', async () => {
+  const env = environment({ mode: 'symbols', category: 'heart' });
+  const card = env.get('#symbol-grid').children[0];
+  const footer = card.querySelector('.symbol-footer');
+  await card.emit('click', { detail: 2 });
+  await footer.children[0].emit('click', { detail: 2 });
+  assert.equal(env.copied.length, 0, 'the second click of a double click is ignored');
+  env.selectTextIn(card.querySelector('.symbol-glyph'));
+  await card.emit('click');
+  await footer.emit('click');
+  assert.equal(env.copied.length, 0, 'copying preserves a selection inside the card');
+  env.selectTextIn(env.get('#symbol-search'));
+  await footer.emit('click');
+  assert.deepEqual(env.copied, ['♡'], 'a selection elsewhere does not disable this card');
+});
+
+test('all symbol library cards copy their exact Unicode from padding, including wide cards', async () => {
+  const env = environment({ mode: 'symbols' });
+  const cards = env.get('#symbol-grid').children;
+  assert.equal(cards.length, symbols.length);
+  for (const card of cards) await card.emit('click');
+  await settleCopy();
+  assert.deepEqual(env.copied, symbols.map(symbol => symbol.text));
+  assert.equal(env.tracked.filter(item => item.name === 'copy').length, symbols.length);
+});
+
+test('category, search, saved and reset rendering preserve footer copying on wide symbol cards', async () => {
+  const env = environment({ mode: 'symbols', favorites: ['symbol:face-3'] });
+  await env.get('#category-divider').click();
+  let card = env.get('#symbol-grid').children[0];
+  assert.equal(card.classList.contains('symbol-card-wide'), true);
+  await card.querySelector('.symbol-footer').emit('click');
+  assert.equal(env.copied.at(-1), '─ ✦ ─');
+  await env.get('#category-all').click();
+  await env.set('symbol-search', 'Open arms', 'input');
+  await env.get('#filter-saved').click();
+  assert.equal(env.get('#symbol-grid').children.length, 1);
+  card = env.get('#symbol-grid').children[0];
+  assert.equal(card.classList.contains('symbol-card-wide'), true);
+  await card.querySelector('.symbol-footer').children[0].emit('click');
+  assert.equal(env.copied.at(-1), '(づ｡◕‿‿◕｡)づ');
+  await env.get('#reset-symbols').click();
+  await env.get('#symbol-grid').children[0].querySelector('.symbol-footer').emit('click');
+  assert.deepEqual(env.copied, ['─ ✦ ─', '(づ｡◕‿‿◕｡)づ', '♡']);
+});
+
+test('a symbol footer opens exact manual-copy text when the clipboard is unavailable', async () => {
+  const env = environment({ mode: 'symbols', category: 'bracket', copyOutcome: 'manual' });
+  const card = env.get('#symbol-grid').children[0];
+  await card.querySelector('.symbol-footer').children[0].emit('click');
+  await settleCopy();
+  assert.deepEqual(env.copied, ['【 】']);
+  assert.equal(env.get('#manual-copy').open, true);
+  assert.equal(env.get('#manual-field').value, '【 】');
+  assert.equal(env.document.activeElement, env.get('#manual-field'));
+  assert.equal(env.get('#manual-field').selected, true);
+  assert.equal(env.stored.has('copysprig-recent'), false);
+  assert.equal(env.tracked.length, 0);
+  assert.match(env.get('#toast').textContent, /Select the text/);
 });
