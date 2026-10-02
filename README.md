@@ -26,9 +26,20 @@ node scripts/report.mjs
 
 Health checks every route, metadata, redirects, sitemap, robots, assets and real 404 responses. Browser QA is still necessary for clipboard, keyboard and visual behavior. Reporting shows unavailable metrics until real exports are imported; see [metrics/README.md](metrics/README.md).
 
+If another application uses port 4173, leave it running and start CopySprig in a separate PowerShell terminal on 4175:
+
+```powershell
+$env:PORT = '4175'
+npm run dev
+```
+
+Open http://127.0.0.1:4175 and use `node scripts/health.mjs --base http://127.0.0.1:4175` for that preview. The `PORT` setting affects this terminal's preview process; it does not change production. Stop the preview and close this separate terminal when finished.
+
 ## Edit and deploy
 
 Edit src/ and scripts/build.mjs; dist/ is generated and portable. config.json centrally defines the public origin, contact, public analytics ID, ownership tags and inactive ad settings. Changing domains requires updating siteUrl, rebuilding and checking the export. .env.example documents optional health/provisioning overrides; normal operation needs no secrets.
+
+Follow [DESIGN.md](DESIGN.md) for the warm paper/ink workshop identity, specimen rows, responsive collection access and meaningful visual, keyboard, copy/search/save checks before deployment. The standard also defines evidence-based maintenance without unnecessary cosmetic changes.
 
 Push verified changes to main. The dedicated workflow runs tests/build/audit, deploys Firebase Hosting and checks the live site. View actual results in [Actions](https://github.com/ariel-hi/copysprig/actions). A source push alone does not prove deployment. For manual deployment using an existing authorized Firebase CLI session:
 
