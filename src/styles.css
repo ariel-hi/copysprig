@@ -82,6 +82,28 @@ p { margin-bottom: 16px; }
 .subtle-button:hover { color: var(--rust); }
 .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 27px 0 14px; }
 .toolbar h2 { font: 600 1.45rem var(--display); letter-spacing: -.015em; margin: 0; }
+.style-browser { display: grid; grid-template-columns: minmax(0,1fr) minmax(135px,180px) auto; gap: 12px; align-items: end; margin-bottom: 16px; }
+.style-browser label, .mixer-settings label { display: block; font-size: .73rem; font-weight: 750; margin-bottom: 5px; }
+.style-browser input, .style-browser select, .mixer-settings select { display: block; width: 100%; min-height: 44px; min-width: 0; border: 1.5px solid var(--control); border-radius: 10px; padding: 8px 10px; color: var(--ink); background: #faf7ff; font-size: .85rem; }
+.style-browser input::placeholder { color: var(--muted); opacity: 1; }
+.style-count { margin: 0; min-height: 44px; display: flex; align-items: center; font-size: .7rem; color: var(--muted); white-space: nowrap; }
+.mixer-panel { margin-top: 18px; border: 2px solid var(--ink); border-radius: 15px; background: #ffe8f3; }
+.mixer-panel summary { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; min-height: 48px; padding: 11px 16px; font: 600 1.12rem var(--display); list-style: none; }
+.mixer-panel summary::-webkit-details-marker { display: none; }
+.mixer-panel summary span { color: var(--muted); font: .7rem var(--sans); }
+.mixer-panel summary::after { content: '+'; margin-left: auto; }
+.mixer-panel[open] summary::after { content: '−'; }
+.mixer-body { padding: 0 16px 16px; }
+.mixer-description { color: var(--muted); font-size: .8rem; margin-bottom: 14px; }
+.mixer-settings { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; }
+.mixer-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: var(--muted); font: .67rem var(--mono); }
+.mixer-results { grid-template-columns: minmax(0,1fr); }
+.mixer-results .result { flex-direction: row; align-items: center; }
+.mixer-results .result>div:first-child { flex: 1; min-width: 0; }
+.mixer-results .result-actions { margin-top: 0; }
+.mixer-footnote { margin: 12px 0 0; font-size: .68rem; color: var(--muted); line-height: 1.6; }
+.mixer-expanded { margin-top: 24px; }
+.mixer-expanded>h2 { font: 600 1.45rem var(--display); margin: 0; padding: 17px 16px 14px; }
 .pills { display: flex; gap: 5px; flex-wrap: wrap; }
 .pill { border: 1.5px solid var(--control); border-radius: 999px; background: #fff8; padding: 8px 14px; font-size: .78rem; color: var(--ink); font-weight: 700; }
 .pill:hover { background: var(--paper); border-color: var(--ink); }
@@ -99,6 +121,7 @@ p { margin-bottom: 16px; }
 .result-label { display: flex; align-items: baseline; gap: 9px; font: 750 .78rem var(--sans); color: #584067; margin-bottom: 10px; }
 .specimen-index { color: #634476; font: 600 .63rem var(--mono); min-width: 17px; }
 .output { font-family: 'Segoe UI Symbol', 'Cambria Math', 'Apple Symbols', sans-serif; font-size: 1.55rem; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; unicode-bidi: plaintext; }
+.style-note { margin: 10px 0 0; color: #584067; font-size: .68rem; line-height: 1.5; }
 .result-actions { display: flex; align-items: center; gap: 8px; margin-top: auto; }
 .copy { border: 2px solid var(--ink); border-radius: 10px; background: var(--ink); color: var(--paper); padding: 9px 19px; font-size: .8rem; font-weight: 750; white-space: nowrap; transition: background .15s, transform .15s; }
 .copy:hover { background: var(--violet); }
@@ -259,6 +282,13 @@ p { margin-bottom: 16px; }
   .input-meta .subtle-button { font-size: .72rem; padding: 8px; }
   .toolbar { margin-top: 18px; margin-bottom: 12px; gap: 9px; }
   .toolbar h2 { font-size: 1.2rem; }
+  .style-browser { grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 9px; margin-bottom: 12px; }
+  .style-count { grid-column: 1/-1; min-height: 0; font-size: .67rem; }
+  .style-browser input, .style-browser select, .mixer-settings select { font-size: .78rem; padding: 8px; }
+  .mixer-panel { margin-top: 14px; border-radius: 13px; }
+  .mixer-panel summary { padding: 10px 13px; font-size: 1.02rem; }
+  .mixer-body { padding: 0 13px 13px; }
+  .mixer-expanded>h2 { padding-left: 13px; padding-right: 13px; font-size: 1.2rem; }
   .pill { padding: 8px 10px; font-size: .73rem; }
   .result { padding: 16px; gap: 13px; }
   .result-actions { gap: 6px; }
@@ -288,6 +318,9 @@ p { margin-bottom: 16px; }
   .nav a { padding-left: 9px; padding-right: 9px; }
   .result { flex-direction: column; align-items: stretch; gap: 10px; padding: 13px; }
   .result-actions { justify-content: flex-start; }
+  .mixer-panel summary span { display: none; }
+  .mixer-settings { grid-template-columns: minmax(0,1fr); gap: 11px; }
+  .mixer-results .result { flex-direction: column; align-items: stretch; }
   .copy { padding-left: 15px; padding-right: 15px; }
   .result .save { width: 44px; }
   .output { font-size: 1.3rem; line-height: 1.55; }

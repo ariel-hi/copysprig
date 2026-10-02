@@ -35,6 +35,31 @@
     "kind": "utility"
   },
   {
+    "path": "/square-text/",
+    "title": "Square text generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/tiny-text/",
+    "title": "Tiny text generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/upside-down-text/",
+    "title": "Upside-down text generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/glitch-text/",
+    "title": "Glitch text generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/underline-text/",
+    "title": "Underline text generator",
+    "kind": "utility"
+  },
+  {
     "path": "/small-caps/",
     "title": "Small caps generator",
     "kind": "utility"
@@ -52,6 +77,11 @@
   {
     "path": "/strikethrough-text/",
     "title": "Strikethrough text generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/style-mixer/",
+    "title": "Unicode style mixer",
     "kind": "utility"
   },
   {
