@@ -143,8 +143,6 @@ function environment({ mode = 'styles', category, favorites = [], hash = '', cop
   if (mode === 'styles' || mode === 'mixer') {
     element('text-input', 'textarea');
     element('character-count');
-    element('clear-text', 'button');
-    element('restore-example', 'button');
     const mixer = element('style-mixer', 'details');
     element('mix-style', 'select', mixer).value = 'sans-bold';
     element('mix-effect', 'select', mixer).value = 'none';

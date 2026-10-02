@@ -281,7 +281,6 @@ p { margin-bottom: 16px; }
   .local-indicator { font-size: .65rem; }
   .text-input { min-height: 64px; padding: 9px 12px; font-size: 1.08rem; }
   .input-meta { font-size: .6rem; gap: 0; }
-  .input-meta .subtle-button { font-size: .72rem; padding: 8px; }
   .toolbar { margin-top: 18px; margin-bottom: 12px; gap: 9px; }
   .toolbar h2 { font-size: 1.2rem; }
   .style-browser { grid-template-columns: minmax(0,1fr) minmax(0,1fr) 44px; gap: 9px; margin-bottom: 12px; }
