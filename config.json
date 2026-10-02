@@ -1,0 +1,19 @@
+{
+  "brand": "CopySprig",
+  "siteUrl": "https://copysprig.web.app",
+  "contactUrl": "https://github.com/ariel-hi/copysprig/issues",
+  "analytics": {
+    "mode": "off",
+    "measurementId": ""
+  },
+  "ads": {
+    "enabled": false,
+    "publisherId": "",
+    "slotId": "",
+    "cmpReady": false
+  },
+  "verification": {
+    "google": "ZynZh35rAMLi2e2OdprcdTNyEMf9i-Tw_1x-5wSTGnk",
+    "bing": ""
+  }
+}

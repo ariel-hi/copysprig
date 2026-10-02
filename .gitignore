@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.*
+!.env.example
+firebase-debug.log
+firebase-debug.*.log
+.firebase/
+artifacts/
+.sites-runtime/
+.openai/
+metrics/*.private.json
+

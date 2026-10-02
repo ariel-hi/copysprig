@@ -1,0 +1,142 @@
+[
+  {
+    "path": "/",
+    "title": "Fancy text generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/bold-text/",
+    "title": "Bold text generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/italic-text/",
+    "title": "Italic text generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/cursive-text/",
+    "title": "Cursive text generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/gothic-text/",
+    "title": "Gothic text generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/double-struck-text/",
+    "title": "Double-struck text generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/bubble-text/",
+    "title": "Bubble text generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/small-caps/",
+    "title": "Small caps generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/fullwidth-text/",
+    "title": "Fullwidth text generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/monospace-text/",
+    "title": "Monospace text generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/strikethrough-text/",
+    "title": "Strikethrough text generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/text-decorator/",
+    "title": "Text decorator generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/plain-text/",
+    "title": "Plain text recovery",
+    "kind": "utility"
+  },
+  {
+    "path": "/symbols/",
+    "title": "Symbols to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/heart-symbols/",
+    "title": "Hearts to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/star-symbols/",
+    "title": "Stars to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/arrow-symbols/",
+    "title": "Arrows to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/flower-symbols/",
+    "title": "Flowers to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/moon-symbols/",
+    "title": "Moons & sky to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/bracket-symbols/",
+    "title": "Brackets to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/music-symbols/",
+    "title": "Music to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/dividers/",
+    "title": "Dividers to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/kaomoji/",
+    "title": "Kaomoji to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/about/",
+    "title": "About CopySprig",
+    "kind": "information"
+  },
+  {
+    "path": "/privacy/",
+    "title": "Privacy",
+    "kind": "information"
+  },
+  {
+    "path": "/terms/",
+    "title": "Terms of use",
+    "kind": "information"
+  },
+  {
+    "path": "/contact/",
+    "title": "Contact CopySprig",
+    "kind": "information"
+  },
+  {
+    "path": "/unicode-guide/",
+    "title": "A practical Unicode paste guide",
+    "kind": "information"
+  }
+]

@@ -1,0 +1,149 @@
+COPYSPRIG — SMALL SYMBOL REFERENCE
+https://copysprig.web.app/
+
+Copy a short accent, preview it in your app, and keep essential details in ordinary text. Appearance and accessibility vary.
+
+HEARTS
+♡  —  White heart
+♥  —  Black heart suit
+❤  —  Heavy heart
+❥  —  Rotated heart bullet
+❣  —  Heart exclamation
+ღ  —  Georgian letter ghan
+💗  —  Growing heart
+💜  —  Purple heart
+🤍  —  White heart emoji
+🖤  —  Black heart emoji
+
+STARS
+☆  —  White star
+★  —  Black star
+✦  —  Black four pointed star
+✧  —  White four pointed star
+✩  —  Stress outlined white star
+✪  —  Circled white star
+✫  —  Open center black star
+✬  —  Black center white star
+✭  —  Outlined black star
+✮  —  Heavy outlined black star
+✯  —  Pinwheel star
+⋆  —  Star operator
+✶  —  Six pointed black star
+✷  —  Eight pointed rectilinear star
+✸  —  Heavy eight pointed star
+✨  —  Sparkles emoji
+
+ARROWS
+←  —  Leftwards arrow
+→  —  Rightwards arrow
+↑  —  Upwards arrow
+↓  —  Downwards arrow
+↔  —  Left right arrow
+↕  —  Up down arrow
+↗  —  North east arrow
+↘  —  South east arrow
+↙  —  South west arrow
+↖  —  North west arrow
+↳  —  Downwards arrow with tip right
+↱  —  Upwards arrow with tip right
+➜  —  Heavy round tipped right arrow
+➝  —  Triangle headed right arrow
+➞  —  Heavy triangle headed right arrow
+➤  —  Black rightwards arrowhead
+⟵  —  Long leftwards arrow
+⟶  —  Long rightwards arrow
+⇢  —  Rightwards dashed arrow
+
+FLOWERS
+✿  —  Black florette
+❀  —  White florette
+❁  —  Eight petalled outlined black florette
+✾  —  Six petalled black and white florette
+✽  —  Heavy teardrop spoked asterisk
+❃  —  Heavy teardrop spoked pinwheel asterisk
+❋  —  Heavy eight teardrop spoked propeller asterisk
+✼  —  Open centre teardrop spoked asterisk
+⚘  —  Flower
+☘  —  Shamrock
+🍃  —  Leaf fluttering in wind
+🌸  —  Cherry blossom
+
+MOONS & SKY
+☾  —  Last quarter moon
+☽  —  First quarter moon
+☀  —  Black sun with rays
+☼  —  White sun with rays
+☁  —  Cloud
+☄  —  Comet
+🌙  —  Crescent moon emoji
+🌑  —  New moon
+🌒  —  Waxing crescent moon
+🌓  —  First quarter moon emoji
+🌔  —  Waxing gibbous moon
+🌕  —  Full moon
+🌖  —  Waning gibbous moon
+🌗  —  Last quarter moon emoji
+🌘  —  Waning crescent moon
+
+BRACKETS
+【 】  —  Black lenticular brackets
+〔 〕  —  Tortoise shell brackets
+「 」  —  Corner brackets
+『 』  —  White corner brackets
+〖 〗  —  White lenticular brackets
+〈 〉  —  Angle brackets
+《 》  —  Double angle brackets
+⟦ ⟧  —  Mathematical white square brackets
+⟨ ⟩  —  Mathematical angle brackets
+❬ ❭  —  Medium angle bracket ornaments
+❮ ❯  —  Heavy angle quotation ornaments
+❴ ❵  —  Curly bracket ornaments
+[ ]  —  Square brackets
+( )  —  Parentheses
+
+MUSIC
+♪  —  Eighth note
+♫  —  Beamed eighth notes
+♬  —  Beamed sixteenth notes
+♩  —  Quarter note
+♭  —  Music flat sign
+♮  —  Music natural sign
+♯  —  Music sharp sign
+𝄞  —  Musical symbol G clef
+𝄢  —  Musical symbol F clef
+🎵  —  Musical note emoji
+🎶  —  Multiple musical notes
+
+DIVIDERS
+─ ✦ ─  —  Four point star divider
+── ♡ ──  —  Heart divider
+· · ─ ·✶· ─ · ·  —  Dotted star divider
+─── ⋆⋅☆⋅⋆ ───  —  Star cluster divider
+⊹ ── ⊹  —  Small sparkle divider
+── ❀ ──  —  Flower divider
+☾ ─── ☽  —  Moon divider
+── ♪ ──  —  Music divider
+• ── •  —  Bullet divider
+— — —  —  Plain dash divider
+* * *  —  Plain asterisk divider
+─────  —  Short line divider
+
+KAOMOJI
+(＾▽＾)  —  Happy smile
+(•‿•)  —  Small smile
+(｡◕‿◕｡)  —  Bright smile
+(づ｡◕‿‿◕｡)づ  —  Open arms
+(˶ᵔ ᵕ ᵔ˶)  —  Gentle smile
+(－‸ლ)  —  Facepalm
+(￣▽￣)  —  Relaxed smile
+( ˘͈ ᵕ ˘͈ )  —  Soft smile
+(⊙_⊙)  —  Wide eyes
+(・_・;)  —  Nervous
+(╯°□°）╯︵ ┻━┻  —  Table flip
+┬─┬ノ( º _ ºノ)  —  Table restore
+(人´∀｀)  —  Thank you
+ʕ•ᴥ•ʔ  —  Bear face
+=^･ω･^=  —  Cat face
+(ง •̀_•́)ง  —  Ready to go
+
+No font file is installed. This is a UTF-8 character reference.

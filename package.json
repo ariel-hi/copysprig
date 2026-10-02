@@ -1,0 +1,17 @@
+{
+  "name": "copysprig",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node scripts/check.mjs",
+    "health": "node scripts/health.mjs",
+    "report": "node scripts/report.mjs",
+    "deploy": "npm run build && npm run check && firebase deploy --only hosting --project copysprig"
+  },
+  "engines": { "node": ">=22" },
+  "devDependencies": {}
+}
