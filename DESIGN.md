@@ -1,71 +1,65 @@
 # CopySprig design standard
 
-CopySprig is a small text workshop: enter a few words, compare useful Unicode specimens, copy a result, and keep a selection for next time. Warm paper, dark ink, ruled lists and a restrained botanical mark give the tools a recognizable home. The working tool comes before explanations. Readable output and an easy first copy take priority over decoration.
+CopySprig is a colorful text playground: enter a phrase, compare Unicode styles, copy a result and save a selection for next time. Rounded display lettering, a lavender canvas, deep violet outlines and coral, lime and pink cards define the current identity. Decoration supports an easy first copy and readable results.
 
-This is a maintainer standard for the current source, not a claim that a release has passed visual or accessibility verification. [src/styles.css](src/styles.css) defines the presentation; [scripts/build.mjs](scripts/build.mjs) generates the shared structure; [src/app.mjs](src/app.mjs) implements interactive states. Edit those sources and rebuild. Do not hand-edit generated `dist` pages. The build versions CSS, entry modules and their local module imports from the normalized source content. Keep that version propagation intact so returning visitors receive a coherent release; HTML revalidates while versioned assets can be cached.
+This describes the implemented source, not a completed release audit. [src/styles.css](src/styles.css) defines presentation, [scripts/build.mjs](scripts/build.mjs) generates shared structure and [src/app.mjs](src/app.mjs) implements interactions. Edit source and rebuild; never hand-edit generated `dist`. Preserve content-based asset versions and their propagation through local module imports so returning visitors receive a coherent release.
 
-## Palette and typography
+## Palette and type
 
-Use the existing semantic variables. Keep a single palette across the homepage, supporting utilities, information pages, manual-copy window, favicon and social preview.
+Use the existing variables consistently across tools, collections, articles, dialogs, error pages and brand assets.
 
 | Token | Value | Role |
 | --- | --- | --- |
-| `--bg` | `#f8f5ec` | Warm page ground |
-| `--paper` | `#fffdf7` | Input surfaces and reversed action text |
-| `--ink` | `#25362c` | Body text, strong specimen rules |
-| `--green` | `#345440` | Primary actions, links and sprig |
-| `--rust` | `#a6452d` | Small annotations, hover and focus accents |
-| `--muted` | `#60665d` | Supporting text that remains readable |
-| `--line` | `#d1d3c5` | Decorative dividers and list structure |
-| `--control` | `#84907e` | Input and save-control boundaries |
-| `--soft` | `#eaf0e5` | Saved/copied-state surface |
+| `--bg` | `#f2ebff` | Lavender canvas |
+| `--paper` | `#ffffff` | White surfaces and reversed text |
+| `--ink` | `#27133f` | Deep violet text, outlines and primary buttons |
+| `--muted` | `#655676` | Supporting text |
+| `--green` | `#6231c9` | Purple links and action accents; legacy token name |
+| `--rust` | `#923048` | Berry hover accent; legacy token name |
+| `--line` | `#d5c5ea` | Decorative separators |
+| `--control` | `#9381aa` | Form-control boundaries |
+| `--soft` | `#e9ddff` | Soft lavender surface |
+| `--coral` | `#ff987f` | Coral brand accent |
+| `--lime` | `#d9ff65` | Lime accents and confirmed states |
+| `--pink` | `#ffd4e9` | Pink accent |
+| `--violet` | `#6d35df` | Brand violet |
 
-Georgia, with Times New Roman/serif fallbacks, is the display face for the wordmark and editorial headings. Segoe UI, Helvetica and Arial keep labels, paragraphs and controls familiar. SFMono-Regular, Consolas and Liberation Mono provide small specimen numbers and supporting annotations. Tiny annotations are supplementary; never put the only instruction or action label in them.
+Fredoka supplies the wordmark, headings and display labels. Its self-hosted Latin variable WOFF2 is **29,732 bytes**, supports weights **300–700**, and uses `font-display: swap` plus a local preload. Keep [the OFL license](src/media/fonts/OFL-Fredoka.txt) with the asset and preserve system fallbacks. No external font request or paid dependency is needed. Segoe UI/Helvetica/Arial handle body text and ordinary controls; the mono stack handles supplementary specimen indices.
 
-Keep generated characters in the native glyph stacks already used by the output and symbol components: Segoe UI Symbol, Cambria Math and Apple Symbols where appropriate, then generic fallbacks. A web font must not turn an unsupported character into an invisible result. The interface needs no hosted font service, font download or paid dependency.
+Generated Unicode output keeps its native glyph stack, including Segoe UI Symbol, Cambria Math and Apple Symbols. Fredoka is an interface face, not the font used to render or export every generated character. Keep meaningful labels in ordinary readable text.
 
-## Identity and page hierarchy
+## Identity and components
 
-Reuse the shared two-leaf SVG sprig in the brand and workshop note. The favicon uses the same shape. Decorative glyph studies, indices and sprigs are hidden from assistive technology; meaningful style and symbol names remain ordinary readable text.
+Reuse the shared rounded violet **C monogram with lime sparkle** in the brand and favicon. The Fredoka CopySprig wordmark highlights “Sprig” in violet. Decorative sparks, indices and glyph tickets are hidden from assistive technology.
 
-Keep the introduction short: one clear task heading and a concise explanation, followed by the input or search. The desktop `Aa` study supports the workshop identity and disappears at 760 CSS pixels and below. Avoid adding a taller promotional hero or introductory content that moves the first useful result out of easy reach. Refresh the actual product social screenshot when a substantial visual change makes it stale.
+The desktop hero uses three rotated glyph tickets with thick outlines and offset shadows. It disappears at 760px and below. Keep the task heading and explanation concise so the input, search and first useful result stay easy to reach.
 
-Prefer rules, alignment and spacing to nested panels. Inputs and disclosures use 4px corners; action/filter/save controls use 3px corners; input fields use 2px corners. Text specimens are a continuous ruled list, with a small index, a plain style label, readable output and explicit Copy/Save actions. Symbol collections form a ruled cabinet of named glyphs. Related tools are text links with a small directional mark.
+Use rounded outlined panels, pills and short offset shadows. Result cards have 17px corners and alternate white, coral, lime, lavender, pink and mint surfaces. They form two columns on wide screens, then one column at 1170px and below. Copy and Save remain explicit controls. Symbol cards use the same family of colors and named glyphs; articles, the manual-copy dialog and related links share the rounded vocabulary. Refresh the actual product social screenshot when a visual change makes it stale.
 
-## Mobile and repeat use
+There are no perpetual animations. Keep movement limited to brief hover or action feedback, and preserve `prefers-reduced-motion` behavior: disable animation and transitions, restore ordinary scrolling and remove animated result/action movement.
 
-The tool comes first in source and keyboard order; the collection occupies the right column on desktop. At 760px and below the workspace becomes a column, and CSS places the collection shortcut visually above the tool so it is reachable without scrolling through a long result list. The HTML starts both disclosures closed, so mobile does not paint a large collection and then shift the tool when JavaScript loads. The secondary collection opens on desktop and when crossing back to desktop, preserving user choices while remaining on mobile. Category navigation starts closed on every screen and opens only by user choice; this also keeps the desktop symbol grid stable. Keep the saved count visible on the collection summary.
+## Responsive copying and collections
 
-On symbol pages, **Find a symbol** precedes **Browse collections**. Search stays usable without first expanding the category links. Saved filtering and empty states must offer a clear route back to all results.
+The tool comes first in DOM and keyboard order, with the saved collection at its right on desktop. At 760px and below, CSS places the collection shortcut visually above the tool. Both disclosures start closed in HTML; do not paint an expanded mobile collection and collapse it after loading. The collection opens on desktop and when returning to desktop. Categories open only by user choice. Preserve these stable initial states and the visible saved count.
 
-At 450px and below, each text specimen has the full available width, with Copy and Save together in a horizontal row beneath it. Wide dividers and text faces use one column at that size. Long phrases, multiline input and glyphs wrap rather than forcing page-wide horizontal scrolling. Do not trade readable specimens or 44px save targets for more columns.
+On symbol pages, **Find a symbol** precedes **Browse collections**. Search must work without expanding categories. Saved filters and empty states offer a clear return to all results.
 
-Favorites and recents store selection identifiers on the device. Saved styles apply to the current input; stored custom phrases are not part of this product. Keep the local-storage explanation accurate and the manual-copy route available.
+At 450px and below, output has the full card width, with Copy and Save in one horizontal row beneath it. Wide dividers and text faces use one column. Long phrases and mixed glyphs wrap without page-wide horizontal scrolling. Favorites and recents store identifiers locally; they never retain the visitor’s phrases.
 
-## Interaction and accessibility
+## Accessible interaction
 
-Copy is a named button, and Save exposes its item name and pressed state. A successful copy gives feedback at the activated control and through the polite live status region. Visual feedback alone is not proof of clipboard delivery: use an actual clipboard read or paste when testing. If automatic copying fails, the manual-copy dialog must expose selectable text, a clear Done action and sensible focus restoration. Empty input must not report a successful copy of an earlier result.
+Buttons keep a minimum **44×44px** target. Preserve named Copy/Save actions, pressed states, visible keyboard focus, the skip link, native disclosures and main’s `tabindex="-1"`. Confirm successful copying through the actual clipboard payload or paste, not just a toast. The manual-copy dialog exposes selectable text, a Done action and sensible focus restoration. Empty input must not copy a stale result.
 
-Buttons have a source minimum of **44×44px**; frequently used links and disclosure summaries also keep generous tap height. This is a project choice; WCAG 2.2's AA [target-size criterion](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html) has a 24px minimum with exceptions. Keep space between neighboring actions and visible disclosure summaries.
+Check actual text/background pairs in default, hover, copied, saved, placeholder and consent states. Normal text needs **4.5:1** contrast; qualifying large text and important control boundaries need **3:1**. Lighter decorative separators cannot be the only control boundary. Retain readable labels on colored cards and the dark focus outline with its white halo. Review [text contrast](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html), [non-text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) and [reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) when affected. These checks do not establish full accessibility certification.
 
-Normal text should meet **4.5:1** contrast; qualifying large text may use **3:1**. Important control boundaries, state indicators and authored focus indicators need **3:1** against adjacent colors. Decorative list rules may be lighter, but cannot be the only way to identify a control. Check actual foreground/background pairs, including muted text, placeholders, hover, saved, copied and consent states. See W3C's [text contrast](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) and [non-text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) guidance.
+## Verify, deploy and maintain
 
-Maintain visible keyboard focus, the skip link, meaningful labels, native disclosure semantics and logical navigation. Main has `tabindex="-1"` so the skip link can move focus reliably without adding a normal tab stop. Keep tool controls before the collection in keyboard order. Focus must remain apparent on paper and colored controls; do not remove outlines to improve a screenshot. Respect reduced motion. Check that zoom/reflow does not hide text or controls at **320 CSS pixels**. W3C's [focus-visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html) and [reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) guidance explain those requirements. These checks do not establish full accessibility certification.
+Run the required tests, build and audit in [README.md](README.md). Use a separate preview port if another application occupies 4173.
 
-## Before deploying a visual change
+1. Inspect the homepage and affected text/symbol/wide-glyph pages at **320, 390, 768 CSS pixels and desktop**. Record viewport, route, source revision and date. Check first-copy access, font loading, wrapping, overflow, action alignment and disclosure stability.
+2. Use the keyboard through the skip link, navigation, input/search, filters, Copy, Save and disclosures. Check focus and the manual-copy route when changed.
+3. Copy a neutral sample and verify its actual payload. Include multiline, long and mixed Unicode input when output changes. Search a name, test no matches, return to All, save a selection and reach it again.
+4. Keep analytics off during routine QA, or explicitly label test traffic as operator QA. Never send input, output, clipboard contents or search words to analytics.
+5. Deploy authorized fixes immediately after necessary verification passes. Confirm the actual deployment, live HTTP health and the changed interaction on the public site. Record unavailable checks as gaps, not passes.
 
-Run the required project build, tests and audit from [README.md](README.md). Then inspect the rendered change, using an isolated preview port when another application occupies 4173.
-
-1. Review the homepage, a focused text tool, symbols and a wide divider/text-face collection at **320, 390, 768 CSS pixels and desktop**. Record exact viewport dimensions, route, source revision and date with screenshots. Check overflow, first useful result, typography, wrapping, action alignment and collection/category access.
-2. Tab through the skip link, navigation, disclosures, input/search, filters, Copy, Save and information links. Use Enter/Space as appropriate. Confirm visible focus, meaningful names and state changes; check the manual-copy dialog if that path changed.
-3. Copy a neutral sample and verify the actual payload. Include multiline text, punctuation, emoji, accented/non-Latin text and long wrapping input when output layout changes. Test a named symbol and a wide divider when those components change.
-4. Search a name, inspect a no-match state, return to All, save a selection and reach it through the collection/saved filter. Check repeated-copy feedback and that empty input does not copy stale text. Keep analytics disabled during routine visual QA, or classify test traffic explicitly as operator QA.
-5. Deploy authorized fixes as soon as the necessary verification passes. Confirm the actual deployment result, run live HTTP health, and repeat the changed interaction on the public site. A local screenshot or a passing HTTP check alone does not prove the whole release.
-
-Keep evidence in ignored `artifacts` or the project's private verification record. Never commit credentials, account screenshots or visitor text. Record unavailable browser/clipboard checks as gaps, not passes. Recheck only the affected behavior and required gates unless a new failure justifies broader testing.
-
-## Ongoing quality review
-
-Weekly review should compare the live homepage and one rotating supporting utility with the last verified evidence. Look for a concrete regression or useful improvement in first-copy access, specimen readability, keyboard use, saved-item access, search, overflow, contrast or unobstructed controls. Use actual search/interaction data when available; absent data stays unavailable.
-
-Preserve the workshop identity and portable, dependency-free core. Make a change when an observed defect or credible user need explains its value. A schedule is not a reason to restyle a healthy page. Keep infrastructure and marketing spending at $0, do not create accounts or send more outreach, and notify the owner only for a meaningful change, failure or required action. Local scheduled reviews require the computer and app to be available; they are not an always-on cloud monitor. [Official scheduled-task guidance](https://learn.chatgpt.com/docs/automations?surface=app).
+Keep dated evidence in ignored artifacts or private verification records; never commit credentials, account screenshots or visitor text. Weekly review compares the live homepage and one rotating utility with verified evidence, looking for observed usability defects or useful improvements. Preserve this colorful identity without unnecessary cosmetic churn. Keep spending at $0, create no accounts and send no additional outreach during maintenance. Notify only for a meaningful change, failure or required owner action. Local scheduled reviews require the computer and app to be available; they are not an always-on cloud monitor. [Official scheduling guidance](https://learn.chatgpt.com/docs/automations?surface=app).

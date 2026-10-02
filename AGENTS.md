@@ -1,6 +1,6 @@
 # CopySprig maintenance
 
-Read `DESIGN.md` before changing visible UI. Preserve the text-workshop identity and the mobile-first copying workflow across utility, collection, article, dialog and error pages.
+Read `DESIGN.md` before changing visible UI. Preserve the colorful Fredoka identity: lavender canvas, deep violet outlines, coral/lime/pink cards, rounded controls, offset shadows and the C-and-spark mark. Keep the first useful tool and mobile copying workflow clear across utility, collection, article, dialog and error pages. Preserve the self-hosted font's OFL license, native Unicode glyph fallbacks, stable mobile disclosures and reduced-motion behavior; do not add perpetual animations.
 
 Keep infrastructure and marketing spending at $0. Text transformation, symbol search and copying must work locally without accounts, ads or analytics. Never send entered text, generated text, clipboard contents or search words to analytics. Keep ads inactive until the real account, publisher, approval and consent requirements are met.
 

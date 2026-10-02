@@ -39,7 +39,7 @@ Open http://127.0.0.1:4175 and use `node scripts/health.mjs --base http://127.0.
 
 Edit src/ and scripts/build.mjs; dist/ is generated and portable. config.json centrally defines the public origin, contact, public analytics ID, ownership tags and inactive ad settings. Changing domains requires updating siteUrl, rebuilding and checking the export. .env.example documents optional health/provisioning overrides; normal operation needs no secrets.
 
-Follow [DESIGN.md](DESIGN.md) for the warm paper/ink workshop identity, specimen rows, responsive collection access and meaningful visual, keyboard, copy/search/save checks before deployment. The standard also defines evidence-based maintenance without unnecessary cosmetic changes.
+Follow [DESIGN.md](DESIGN.md) for the vibrant Fredoka identity: lavender canvas, deep violet outlines, colorful rounded cards, offset shadows and the C-and-spark mark. It covers responsive collection access, reduced motion and meaningful visual, keyboard, copy/search/save checks before deployment, plus evidence-based maintenance without unnecessary cosmetic changes.
 
 Push verified changes to main. The dedicated workflow runs tests/build/audit, deploys Firebase Hosting and checks the live site. View actual results in [Actions](https://github.com/ariel-hi/copysprig/actions). A source push alone does not prove deployment. For manual deployment using an existing authorized Firebase CLI session:
 
