@@ -1,6 +1,6 @@
-import {STYLES,transformText,plainText} from './unicode.mjs?v=265ecb54450d';
-import {symbols} from './catalog.mjs?v=265ecb54450d';
-import {copyText} from './copy.mjs?v=265ecb54450d';
+import {STYLES,transformText,plainText} from './unicode.mjs?v=830a92a8fb34';
+import {symbols} from './catalog.mjs?v=830a92a8fb34';
+import {copyText} from './copy.mjs?v=830a92a8fb34';
 const data = JSON.parse(document.querySelector('#page-data').textContent);
 const input = document.querySelector('#text-input');
 const results = document.querySelector('#results');
@@ -20,7 +20,18 @@ function read(key,fallback){try{const value=JSON.parse(localStorage.getItem(key)
 function write(key,value){try{localStorage.setItem(key,JSON.stringify(value));}catch{notify('Storage is unavailable. Copying still works.');}}
 function notify(message){clearTimeout(toastTimer);toast.textContent=message;toastTimer=setTimeout(()=>{toast.textContent='';},3500);}
 function event(name,attributes={}){if(window.copysprigTrack)window.copysprigTrack(name,attributes);}
-function favorite(id){favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[id,...favorites].slice(0,60);write('copysprig-favorites',favorites);renderShelf();renderFavorites();if(grid)renderSymbols();if(filter==='saved'&&results)renderStyles();event('favorite_toggle',{item_kind:id.startsWith('style:')?'style':'symbol'});}
+function favorite(id){
+  const container=grid||results;
+  const active=document.activeElement;
+  const restoreFocus=filter==='saved'&&container?.contains(active)&&active?.dataset?.save===id;
+  let nextId;
+  if(restoreFocus){const buttons=Array.from(container.querySelectorAll('[data-save]'));const index=buttons.indexOf(active);nextId=buttons[index+1]?.dataset.save||buttons[index-1]?.dataset.save;}
+  favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[id,...favorites].slice(0,60);
+  write('copysprig-favorites',favorites);renderShelf();renderFavorites();
+  if(filter==='saved'){if(grid)renderSymbols();if(results)renderStyles();}
+  if(restoreFocus){const next=Array.from(container.querySelectorAll('[data-save]')).find(b=>b.dataset.save===nextId);(next||document.querySelector('[data-filter="saved"]'))?.focus();}
+  event('favorite_toggle',{item_kind:id.startsWith('style:')?'style':'symbol'});
+}
 function renderFavorites(){document.querySelectorAll('[data-save]').forEach(b=>{const yes=favorites.includes(b.dataset.save);b.setAttribute('aria-pressed',String(yes));b.textContent=yes?'★':'☆';b.setAttribute('aria-label',`${yes?'Unsave':'Save'} ${b.dataset.name}`);});}
 function record(id){recent=[id,...recent.filter(x=>x!==id)].slice(0,8);write('copysprig-recent',recent);renderShelf();}
 function copied(button){if(!button)return;clearTimeout(copiedTimers.get(button));button.dataset.copied='true';copiedTimers.set(button,setTimeout(()=>{delete button.dataset.copied;copiedTimers.delete(button);},1800));}

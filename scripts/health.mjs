@@ -94,7 +94,7 @@ try {
     const social = new URL('/assets/social-preview.jpg', canonical).href;
     record(`social:${route.path}`, og('og:url') === expected && og('og:image') === social && Boolean(og('og:title')) && Boolean(og('og:description')) && twitter('twitter:card') === 'summary_large_image' && twitter('twitter:image') === social, 'Canonical Open Graph URL and shared social image metadata');
     record(`favicon-link:${route.path}`, links.some(link => link.rel === 'icon' && link.href === '/favicon.svg'), 'Favicon linked');
-    for (const asset of [...links.filter(link => link.rel === 'stylesheet').map(link => link.href), ...elements(response.text, 'script').map(script => script.src)]) if (asset?.startsWith('/')) assets.add(asset);
+    for (const asset of [...links.filter(link => link.rel === 'stylesheet' || (link.rel === 'preload' && link.as === 'font')).map(link => link.href), ...elements(response.text, 'script').map(script => script.src)]) if (asset?.startsWith('/')) assets.add(asset);
   });
   const sitemap = await request('/sitemap.xml');
   const locations = sitemap.text ? [...sitemap.text.matchAll(/<loc>\s*([^<]+)\s*<\/loc>/g)].map(match => decode(match[1].trim())) : [];
@@ -116,6 +116,7 @@ try {
     else if (pathname.endsWith('.svg')) valid &&= /image\/svg\+xml/i.test(type) && /<svg\b/i.test(response.text || '');
     else if (pathname.endsWith('.css')) valid &&= /text\/css/i.test(type);
     else if (pathname.endsWith('.mjs')) valid &&= /javascript/i.test(type);
+    else if (pathname.endsWith('.woff2')) valid &&= /font\/woff2/i.test(type) && response.bytes?.subarray(0,4).toString() === 'wOF2';
     record(`asset:${path}`, valid, response.error || `${response.bytes?.length || 0} bytes; ${type}`, {url: response.url, status: response.status});
   });
   const missing = await request(`/__copysprig_health_missing_${started.getTime()}/`);

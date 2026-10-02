@@ -121,6 +121,9 @@ for (const file of allFiles.filter((file) => file.endsWith('.mjs'))) {
   for (const [, imported] of source.matchAll(/\b(?:import|export)\s[^;\n]*?from\s*["'](\.[^"']+)["']/g)) ensure(await exists(resolve(dirname(file), imported.split('?')[0])), `Missing local module ${imported} imported by ${file}`);
 }
 const generatedHtml = (await files(dist)).filter((file) => file.endsWith('.html'));
+const stylesheet = await readFile(resolve(dist,'assets/styles.css'),'utf8');
+for(const [,reference] of stylesheet.matchAll(/url\(['"]?(\.\/[^)'"\s]+)['"]?\)/g)) ensure(await exists(resolve(dist,'assets',reference)), `Missing stylesheet asset: ${reference}`);
+ensure(await exists(resolve(dist,'assets/fonts/OFL-Fredoka.txt')), 'Publish the display font license with its asset.');
 ensure(generatedHtml.length === routes.length + 1, 'Build contains stale/unlisted HTML routes.');
 warnings.forEach((warning) => console.warn(warning));
 if (errors.length) {
