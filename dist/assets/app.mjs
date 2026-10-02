@@ -1,6 +1,6 @@
-import {STYLES,transformText,plainText} from './unicode.mjs';
-import {symbols} from './catalog.mjs';
-import {copyText} from './copy.mjs';
+import {STYLES,transformText,plainText} from './unicode.mjs?v=265ecb54450d';
+import {symbols} from './catalog.mjs?v=265ecb54450d';
+import {copyText} from './copy.mjs?v=265ecb54450d';
 const data = JSON.parse(document.querySelector('#page-data').textContent);
 const input = document.querySelector('#text-input');
 const results = document.querySelector('#results');
@@ -41,8 +41,9 @@ document.querySelector('#clear-history')?.addEventListener('click',()=>{recent=[
 document.querySelector('#clear-favorites')?.addEventListener('click',()=>{favorites=[];write('copysprig-favorites',favorites);renderShelf();renderFavorites();if(grid)renderSymbols();if(results)renderStyles();notify('Saved selections cleared.');});
 document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));if(results)renderStyles();if(grid)renderSymbols();}));
 manual?.querySelector('button')?.addEventListener('click',()=>manual.close());
-const disclosures=[collection,document.querySelector('#categories')].filter(Boolean);
-if(disclosures.length&&typeof window.matchMedia==='function'){const mobile=window.matchMedia('(max-width: 760px)');if(mobile.matches)disclosures.forEach(panel=>{panel.open=false;});mobile.addEventListener('change',e=>{if(!e.matches)disclosures.forEach(panel=>{panel.open=true;});});}
+// Categories start closed on every screen; opening them is an explicit choice.
+// Only the secondary collection expands automatically on desktop.
+if(collection&&typeof window.matchMedia==='function'){const mobile=window.matchMedia('(max-width: 760px)');collection.open=!mobile.matches;mobile.addEventListener('change',e=>{if(!e.matches)collection.open=true;});}
 renderShelf();renderStyles();renderSymbols();
 // Optional proposed WebMCP interface; browser support is feature-detected.
 const model=document.modelContext;

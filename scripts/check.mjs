@@ -118,7 +118,7 @@ for (const file of allFiles.filter((file) => file.endsWith('.mjs'))) {
   const check = spawnSync(process.execPath, ['--check', file], { encoding: 'utf8' });
   ensure(check.status === 0, `JavaScript syntax failed: ${file}\n${check.stderr ?? ''}`);
   const source = await readFile(file, 'utf8');
-  for (const [, imported] of source.matchAll(/\b(?:import|export)\s[^;\n]*?from\s*["'](\.[^"']+)["']/g)) ensure(await exists(resolve(dirname(file), imported)), `Missing local module ${imported} imported by ${file}`);
+  for (const [, imported] of source.matchAll(/\b(?:import|export)\s[^;\n]*?from\s*["'](\.[^"']+)["']/g)) ensure(await exists(resolve(dirname(file), imported.split('?')[0])), `Missing local module ${imported} imported by ${file}`);
 }
 const generatedHtml = (await files(dist)).filter((file) => file.endsWith('.html'));
 ensure(generatedHtml.length === routes.length + 1, 'Build contains stale/unlisted HTML routes.');

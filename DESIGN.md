@@ -2,7 +2,7 @@
 
 CopySprig is a small text workshop: enter a few words, compare useful Unicode specimens, copy a result, and keep a selection for next time. Warm paper, dark ink, ruled lists and a restrained botanical mark give the tools a recognizable home. The working tool comes before explanations. Readable output and an easy first copy take priority over decoration.
 
-This is a maintainer standard for the current source, not a claim that a release has passed visual or accessibility verification. [src/styles.css](src/styles.css) defines the presentation; [scripts/build.mjs](scripts/build.mjs) generates the shared structure; [src/app.mjs](src/app.mjs) implements interactive states. Edit those sources and rebuild. Do not hand-edit generated `dist` pages.
+This is a maintainer standard for the current source, not a claim that a release has passed visual or accessibility verification. [src/styles.css](src/styles.css) defines the presentation; [scripts/build.mjs](scripts/build.mjs) generates the shared structure; [src/app.mjs](src/app.mjs) implements interactive states. Edit those sources and rebuild. Do not hand-edit generated `dist` pages. The build versions CSS, entry modules and their local module imports from the normalized source content. Keep that version propagation intact so returning visitors receive a coherent release; HTML revalidates while versioned assets can be cached.
 
 ## Palette and typography
 
@@ -34,7 +34,7 @@ Prefer rules, alignment and spacing to nested panels. Inputs and disclosures use
 
 ## Mobile and repeat use
 
-The tool comes first in source and keyboard order; the collection occupies the right column on desktop. At 760px and below the workspace becomes a column, and CSS places the collection shortcut visually above the tool so it is reachable without scrolling through a long result list. On an initial narrow-screen load, collection and category disclosures close; desktop loads open them. The current responsive behavior opens them when crossing back to desktop and preserves user disclosure choices while remaining on mobile. Keep the saved count visible on the collection summary.
+The tool comes first in source and keyboard order; the collection occupies the right column on desktop. At 760px and below the workspace becomes a column, and CSS places the collection shortcut visually above the tool so it is reachable without scrolling through a long result list. The HTML starts both disclosures closed, so mobile does not paint a large collection and then shift the tool when JavaScript loads. The secondary collection opens on desktop and when crossing back to desktop, preserving user choices while remaining on mobile. Category navigation starts closed on every screen and opens only by user choice; this also keeps the desktop symbol grid stable. Keep the saved count visible on the collection summary.
 
 On symbol pages, **Find a symbol** precedes **Browse collections**. Search stays usable without first expanding the category links. Saved filtering and empty states must offer a clear route back to all results.
 

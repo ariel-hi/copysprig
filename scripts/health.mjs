@@ -105,15 +105,16 @@ try {
   await pool([...assets], async path => {
     const response = await request(path);
     const type = response.headers?.get('content-type') || '';
+    const pathname = new URL(path, base).pathname;
     let valid = response.status === 200 && response.bytes?.length > 0;
-    if (path.endsWith('.png')) valid &&= /image\/png/i.test(type) && response.bytes.length >= 24 && response.bytes.subarray(0, 8).equals(Buffer.from([137,80,78,71,13,10,26,10])) && response.bytes.readUInt32BE(16) >= 600 && response.bytes.readUInt32BE(20) >= 315;
-    else if (/\.jpe?g$/.test(path)) {
+    if (pathname.endsWith('.png')) valid &&= /image\/png/i.test(type) && response.bytes.length >= 24 && response.bytes.subarray(0, 8).equals(Buffer.from([137,80,78,71,13,10,26,10])) && response.bytes.readUInt32BE(16) >= 600 && response.bytes.readUInt32BE(20) >= 315;
+    else if (/\.jpe?g$/.test(pathname)) {
       const dimensions = jpegDimensions(response.bytes);
       valid &&= /image\/jpeg/i.test(type) && dimensions?.width >= 600 && dimensions?.height >= 315;
     }
-    else if (path.endsWith('.svg')) valid &&= /image\/svg\+xml/i.test(type) && /<svg\b/i.test(response.text || '');
-    else if (path.endsWith('.css')) valid &&= /text\/css/i.test(type);
-    else if (path.endsWith('.mjs')) valid &&= /javascript/i.test(type);
+    else if (pathname.endsWith('.svg')) valid &&= /image\/svg\+xml/i.test(type) && /<svg\b/i.test(response.text || '');
+    else if (pathname.endsWith('.css')) valid &&= /text\/css/i.test(type);
+    else if (pathname.endsWith('.mjs')) valid &&= /javascript/i.test(type);
     record(`asset:${path}`, valid, response.error || `${response.bytes?.length || 0} bytes; ${type}`, {url: response.url, status: response.status});
   });
   const missing = await request(`/__copysprig_health_missing_${started.getTime()}/`);
