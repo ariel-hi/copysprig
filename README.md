@@ -1,6 +1,6 @@
 # CopySprig
 
-[Live utility](https://copysprig.web.app/) · [Project contact](https://github.com/ariel-hi/copysprig/issues)
+[Live utility](https://copysprig.com/) · [Project contact](https://github.com/ariel-hi/copysprig/issues)
 
 Free browser tools for short creator profile text: 29 utility routes, 34 curated Unicode styles and 125 named symbols, dividers and kaomoji. There are 34 indexable pages including the guide and site information. Text processing stays in the browser; favorites and recents store selection identifiers locally, never entered phrases. No visitor accounts, database or per-use API.
 
@@ -22,7 +22,7 @@ Open http://127.0.0.1:4173 for preview. In a separate terminal:
 
 ```powershell
 node scripts/health.mjs --base http://127.0.0.1:4173
-node scripts/health.mjs --base https://copysprig.web.app
+node scripts/health.mjs --base https://copysprig.com
 node scripts/report.mjs
 ```
 
@@ -52,11 +52,13 @@ node scripts/health.mjs
 
 Keep Firebase project/site copysprig on Spark with no billing account. Hosting publishes only dist. No Functions, database, Cloud Run, paid trial or upgrade is needed. The quota guide lists 10 GB storage and 10 GB/month transfer; the pricing table also presents 360 MB/day. Use the actual console meter conservatively. Quota exhaustion can block deploys or disable serving on Spark. [Hosting quotas](https://firebase.google.com/docs/hosting/usage-quotas-pricing).
 
+The production origin is https://copysprig.com. The provider hostname https://copysprig.web.app serves the same static export with canonical links to the production domain. To check that mirror, use `node scripts/health.mjs --base https://copysprig.web.app --canonical-base https://copysprig.com`. Firebase path-based redirects apply to every hostname attached to a Hosting site, so a universal redirect to the custom domain on this shared site would loop.
+
 ## Privacy and integrations
 
 GA4 loads only after an explicit analytics opt-in. Enhanced measurement is disabled in its dedicated stream. Page metadata is sanitized globally and per event; copy/favorite events include only fixed selection identifiers. No input, clipboard text, search phrase, URL query or fragment is sent by this integration. Visitors can withdraw consent using Analytics choices. Tests cover inactive integrations, filtering and withdrawal.
 
-Owner and QA traffic is excluded before the Google tag can load, even with previously granted consent. Open [the owner exclusion link](https://copysprig.web.app/?analytics=off) once in each browser profile/device used to visit or test the site. A local preference and host-only cookie preserve the exclusion on later routes and visits; the footer confirms **Analytics excluded**. Clearing all site data removes that preference, so open the link again afterward. Existing tabs receive local-storage exclusion changes immediately; the cookie fallback is rechecked on tab focus and tool actions. The exclusion cannot be overridden by Allow analytics.
+Owner and QA traffic is excluded before the Google tag can load, even with previously granted consent. Open [the owner exclusion link](https://copysprig.com/?analytics=off) once in each browser profile/device used to visit or test the site. A local preference and host-only cookie preserve the exclusion on later routes and visits; the footer confirms **Analytics excluded**. Clearing all site data removes that preference, so open the link again afterward. Existing tabs receive local-storage exclusion changes immediately; the cookie fallback is rechecked on tab focus and tool actions. The exclusion cannot be overridden by Allow analytics.
 
 Localhost, preview URLs and every origin other than the exact configured production `siteUrl` are excluded automatically. Automated browsers identified by `navigator.webdriver` or HeadlessChrome/Playwright/Puppeteer/Selenium user agents are also excluded. For any browser QA, start at `/?analytics=off` before navigating or clicking; test harnesses can additionally set `window.__COPYSPRIG_TEST__ = true` before page scripts run. Ordinary opted-in production visitors remain measurable. HTTP health checks and offline tests do not execute the Google tag. Earlier QA events already collected are historical test data and must stay excluded from business exports; this change does not erase GA4 history.
 

@@ -1,5 +1,5 @@
 COPYSPRIG — SMALL SYMBOL REFERENCE
-https://copysprig.web.app/
+https://copysprig.com/
 
 Copy a short accent, preview it in your app, and keep essential details in ordinary text. Appearance and accessibility vary.
 
