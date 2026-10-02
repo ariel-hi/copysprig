@@ -1,0 +1,40 @@
+name: Verify and deploy CopySprig
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: copysprig-live
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Functional and privacy tests
+        run: npm test
+      - name: Build static site
+        run: npm run build
+      - name: Audit indexable build
+        run: npm run check
+      - name: Deploy verified live site
+        uses: FirebaseExtended/action-hosting-deploy@500ac625ca2dd40cbd15f7659af953801858032a # v0
+        with:
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_COPYSPRIG }}'
+          projectId: copysprig
+          channelId: live
+      - name: Verify public production routes
+        run: npm run health

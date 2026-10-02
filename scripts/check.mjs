@@ -32,6 +32,7 @@ ensure(new Set(routes.map((route) => route.path)).size === routes.length, 'Route
 const titles = new Set();
 const descriptions = new Set();
 const htmlFiles = [];
+const checkedSocialFiles = new Set();
 for (const route of routes) {
   ensure(route.path.startsWith('/') && route.path.endsWith('/'), `Route must be an absolute trailing-slash path: ${route.path}`);
   const file = fileFor(route.path);
@@ -53,6 +54,7 @@ for (const route of routes) {
   ensure(canonicals.length === 1 && canonicals[0].href === origin + route.path, `Incorrect canonical: ${route.path}`);
   ensure(meta(html, 'og:url') === origin + route.path, `Incorrect social URL: ${route.path}`);
   for (const key of ['og:title', 'og:description', 'og:image', 'twitter:card', 'twitter:image']) ensure(Boolean(meta(html, key)), `Missing ${key}: ${route.path}`);
+  ensure(meta(html, 'og:image') === meta(html, 'twitter:image'), `Social image metadata differs: ${route.path}`);
   for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
     const attributes = attrs(match[1]);
     if (['application/json', 'application/ld+json'].includes(attributes.type)) {
@@ -78,10 +80,18 @@ for (const { html, route } of htmlFiles) {
     references++;
     const file = fileFor(url.pathname);
     if (!await exists(file)) {
-      if (pendingSocial && url.pathname === '/assets/social-preview.png') {
+      if (pendingSocial && /^\/assets\/social-preview\.(?:png|jpe?g)$/.test(url.pathname)) {
         if (!warnings.length) warnings.push('Social preview is pending; production checks must run without --allow-pending-social-preview.');
       } else errors.push(`Broken internal link/asset ${reference} in ${route.path}`);
       continue;
+    }
+    if ([meta(html, 'og:image'), meta(html, 'twitter:image')].includes(reference) && !checkedSocialFiles.has(file)) {
+      checkedSocialFiles.add(file);
+      const bytes = await readFile(file);
+      const extension = extname(file).toLowerCase();
+      const png = bytes.length > 24 && bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
+      const jpeg = bytes.length > 24 && bytes[0] === 0xFF && bytes[1] === 0xD8 && bytes[2] === 0xFF && bytes.at(-2) === 0xFF && bytes.at(-1) === 0xD9;
+      ensure((extension === '.png' && png) || (['.jpg', '.jpeg'].includes(extension) && jpeg), `Social preview must contain a valid PNG/JPEG signature matching its extension: ${file}`);
     }
     if (url.hash && extname(file) === '.html') {
       const target = await readFile(file, 'utf8');
