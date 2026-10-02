@@ -1,7 +1,7 @@
-import {STYLES,EFFECTS,FRAMES,transformText,plainText,mixText} from './unicode.mjs?v=e56d9793c17e';
-import {symbols,categories} from './catalog.mjs?v=e56d9793c17e';
-import {copyText} from './copy.mjs?v=e56d9793c17e';
-import {filterStyles,matchesStyleFilters,filterSymbols,pickItem} from './discovery.mjs?v=e56d9793c17e';
+import {STYLES,EFFECTS,FRAMES,transformText,plainText,mixText} from './unicode.mjs?v=c1e9ced1c5ed';
+import {symbols,categories} from './catalog.mjs?v=c1e9ced1c5ed';
+import {copyText} from './copy.mjs?v=c1e9ced1c5ed';
+import {filterStyles,matchesStyleFilters,filterSymbols,pickItem} from './discovery.mjs?v=c1e9ced1c5ed';
 const data = JSON.parse(document.querySelector('#page-data').textContent);
 const input = document.querySelector('#text-input');
 // Keep the example out of the editable value so the first keystroke replaces it.
