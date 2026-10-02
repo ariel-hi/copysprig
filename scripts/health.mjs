@@ -76,6 +76,7 @@ try {
     const evidence = {url: response.url, status: response.status, durationMs: response.durationMs};
     record(`route:${route.path}`, response.status === 200, response.error || `HTTP ${response.status}`, evidence);
     if (response.status !== 200) return;
+    if(!preview)record(`cache:${route.path}`, /(?:^|,)\s*no-cache(?:,|$)/i.test(response.headers.get('cache-control') || ''), 'HTML must revalidate so new releases are coherent');
     record(`html:${route.path}`, /text\/html/i.test(response.headers.get('content-type') || '') && /<!doctype html/i.test(response.text) && /<h1\b/i.test(response.text), 'HTML content type, doctype and heading', evidence);
     const title = decode(response.text.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1] || '').trim();
     record(`title:${route.path}`, Boolean(title) && !titles.has(title), title ? `Title: ${title}${titles.has(title) ? ` (also ${titles.get(title)})` : ''}` : 'Missing title');
