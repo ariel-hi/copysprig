@@ -97,7 +97,7 @@ p { margin-bottom: 16px; }
 .mixer-description { color: var(--muted); font-size: .8rem; margin-bottom: 14px; }
 .mixer-settings { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; }
 .mixer-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: var(--muted); font: .67rem var(--mono); }
-.mixer-results { grid-template-columns: minmax(0,1fr); }
+.results.mixer-results { grid-template-columns: minmax(0,1fr); }
 .mixer-results .result { flex-direction: row; align-items: center; }
 .mixer-results .result>div:first-child { flex: 1; min-width: 0; }
 .mixer-results .result-actions { margin-top: 0; }

@@ -1,6 +1,6 @@
-import {STYLES,EFFECTS,FRAMES,transformText,plainText,mixText} from './unicode.mjs?v=351e3cf4a98f';
-import {symbols} from './catalog.mjs?v=351e3cf4a98f';
-import {copyText} from './copy.mjs?v=351e3cf4a98f';
+import {STYLES,EFFECTS,FRAMES,transformText,plainText,mixText} from './unicode.mjs?v=4f3e6933d766';
+import {symbols} from './catalog.mjs?v=4f3e6933d766';
+import {copyText} from './copy.mjs?v=4f3e6933d766';
 const data = JSON.parse(document.querySelector('#page-data').textContent);
 const input = document.querySelector('#text-input');
 // Keep the example out of the editable value so the first keystroke replaces it.
