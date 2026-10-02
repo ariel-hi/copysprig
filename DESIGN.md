@@ -34,7 +34,7 @@ Reuse the shared rounded violet **C monogram with lime sparkle** in the brand an
 
 The desktop hero uses three rotated glyph tickets with thick outlines and offset shadows. It disappears at 760px and below. Keep the task heading and explanation concise so the input, search and first useful result stay easy to reach.
 
-Use rounded outlined panels, pills and short offset shadows. Result cards have 17px corners and alternate white, coral, lime, lavender, pink and mint surfaces. They form two columns on wide screens, then one column at 1170px and below. Copy and Save remain explicit controls. Symbol cards use the same family of colors and named glyphs; articles, the manual-copy dialog and related links share the rounded vocabulary. Refresh the actual product social screenshot when a visual change makes it stale.
+Use rounded outlined panels, pills and short offset shadows. Result cards have 17px corners and alternate white, coral, lime, lavender, pink and mint surfaces. They form two columns on wide screens, then one column at 1170px and below. Copy and Save remain explicit controls. Use plain text labels on actions and links; do not add decorative directional arrow icons to buttons, downloads or related-tool links. Symbol cards use the same family of colors and named glyphs; articles, the manual-copy dialog and related links share the rounded vocabulary. Refresh the actual product social screenshot when a visual change makes it stale.
 
 There are no perpetual animations. Keep movement limited to brief hover or action feedback, and preserve `prefers-reduced-motion` behavior: disable animation and transitions, restore ordinary scrolling and remove animated result/action movement.
 

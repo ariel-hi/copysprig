@@ -99,11 +99,10 @@ p { margin-bottom: 16px; }
 .output { font-family: 'Segoe UI Symbol', 'Cambria Math', 'Apple Symbols', sans-serif; font-size: 1.55rem; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; unicode-bidi: plaintext; }
 .result-actions { display: flex; align-items: center; gap: 8px; margin-top: auto; }
 .copy { border: 2px solid var(--ink); border-radius: 10px; background: var(--ink); color: var(--paper); padding: 9px 19px; font-size: .8rem; font-weight: 750; white-space: nowrap; transition: background .15s, transform .15s; }
-.copy::after { content: ' ↗'; font-size: 1rem; }
 .copy:hover { background: var(--violet); }
 .copy:active { transform: translateY(2px); }
 .copy[data-copied=true] { background: var(--lime); color: var(--ink); }
-.copy[data-copied=true]::after { content: ' ✓'; }
+.copy[data-copied=true]::after { content: ' ✓'; font-size: 1rem; }
 .save { display: inline-grid; place-items: center; min-width: 44px; width: 44px; padding: 0; border: 1.5px solid #89709c; border-radius: 10px; background: #fff8; color: var(--ink); font-size: 1.35rem; }
 .save:hover, .save[aria-pressed=true] { background: var(--lime); border-color: var(--ink); }
 .shelf { background: #e4d5ff; border: 2px solid var(--ink); border-radius: 17px; box-shadow: 4px 4px 0 var(--ink); }
@@ -175,7 +174,6 @@ p { margin-bottom: 16px; }
 .link-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
 .link-card { text-decoration: none; border: 1.5px solid var(--control); border-radius: 13px; background: #fff9; padding: 17px 19px; color: var(--ink); display: flex; justify-content: space-between; gap: 14px; align-items: center; font-size: .9rem; font-weight: 700; min-height: 64px; transition: background .15s; }
 .link-card:hover { background: var(--lime); color: var(--ink); border-color: var(--ink); }
-.link-arrow { color: var(--green); font-size: 1.2rem; font-weight: 700; }
 .faq { border-top: 1px solid var(--line); padding: 8px 0; }
 .faq summary { font-weight: 700; font-size: .94rem; min-height: 52px; padding: 12px 0; }
 .faq p { margin-top: 8px; max-width: 760px; color: var(--muted); }
@@ -209,7 +207,6 @@ p { margin-bottom: 16px; }
 .consent .pill { border: 1.5px solid var(--ink); color: var(--ink); padding-left: 20px; padding-right: 20px; }
 .consent .pills { gap: 10px; }
 .download { display: inline-flex; align-items: center; gap: 10px; padding: 12px 19px; border: 2px solid var(--ink); background: var(--lime); color: var(--ink); text-decoration: none; border-radius: 11px; font-size: .86rem; font-weight: 750; }
-.download::after { content: '↓'; }
 .download:hover { background: #c9ef50; color: var(--ink); }
 .ad-area { min-height: 280px; margin-top: 28px; border-top: 1px solid var(--line); padding-top: 14px; }
 .ad-area small { color: var(--muted); }
