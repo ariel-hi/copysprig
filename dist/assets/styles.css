@@ -87,7 +87,9 @@ p { margin-bottom: 16px; }
 .pill:hover { background: var(--paper); border-color: var(--ink); }
 .pill[aria-pressed=true] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
 .results { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+.copy-hint { margin: 0 0 14px; color: var(--muted); font-size: .78rem; }
 .result { border: 2px solid var(--ink); border-radius: 17px; background: #fff; display: flex; flex-direction: column; gap: 13px; align-items: stretch; padding: 18px; min-width: 0; transition: box-shadow .15s, transform .15s; }
+.result[data-copyable=true] { cursor: pointer; }
 .result:nth-child(6n+2) { background: #ffe2d8; }
 .result:nth-child(6n+3) { background: #eaffb0; }
 .result:nth-child(6n+4) { background: #e6dbff; }
