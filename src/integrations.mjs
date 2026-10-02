@@ -1,6 +1,26 @@
 const config=JSON.parse(document.querySelector('#integration-data').textContent);
 let analyticsStarted=false;
-function loadAnalytics(){if(analyticsStarted||config.analytics.mode!=='ga4'||!/^G-[A-Z0-9]+$/.test(config.analytics.measurementId))return;analyticsStarted=true;window.dataLayer=window.dataLayer||[];function gtag(){window.dataLayer.push(arguments);}window.gtag=gtag;gtag('consent','default',{analytics_storage:'granted',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config',config.analytics.measurementId,{send_page_view:false,allow_google_signals:false,allow_ad_personalization_signals:false});gtag('event','page_view',{page_location:location.origin+location.pathname,page_title:document.title,page_referrer:document.referrer?new URL(document.referrer).origin:''});window.copysprigTrack=(name,attrs={})=>{const allowed=new Set(['copy','favorite_toggle']);if(!allowed.has(name))return;const safe={};if(['style','symbol'].includes(attrs.item_kind))safe.item_kind=attrs.item_kind;if(typeof attrs.item_id==='string'&&/^(style:[a-z-]+|symbol:[a-z]+-\d+)$/.test(attrs.item_id))safe.item_id=attrs.item_id;gtag('event',name,safe);};const script=document.createElement('script');script.async=true;script.src=`https://www.googletagmanager.com/gtag/js?id=${config.analytics.measurementId}`;document.head.append(script);}
+function loadAnalytics(){
+ if(analyticsStarted||config.analytics.mode!=='ga4'||!/^G-[A-Z0-9]+$/.test(config.analytics.measurementId))return;
+ analyticsStarted=true;window.dataLayer=window.dataLayer||[];
+ function gtag(){window.dataLayer.push(arguments);}window.gtag=gtag;
+ const safePage={page_location:location.origin+location.pathname,page_title:document.title,page_referrer:document.referrer?new URL(document.referrer).origin:''};
+ gtag('consent','default',{analytics_storage:'granted',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});
+ // GA otherwise defaults later/custom events to the full browser URL/referrer.
+ // Set global and stream defaults before initialization, then explicit event
+ // fields too; optional visitor attributes can never override these values.
+ gtag('set',safePage);
+ gtag('js',new Date());
+ gtag('config',config.analytics.measurementId,{...safePage,send_page_view:false,allow_google_signals:false,allow_ad_personalization_signals:false});
+ gtag('event','page_view',safePage);
+ window.copysprigTrack=(name,attrs={})=>{
+  const allowed=new Set(['copy','favorite_toggle']);if(!allowed.has(name))return;
+  const safe={};if(['style','symbol'].includes(attrs.item_kind))safe.item_kind=attrs.item_kind;
+  if(typeof attrs.item_id==='string'&&/^(style:[a-z-]+|symbol:[a-z]+-\d+)$/.test(attrs.item_id))safe.item_id=attrs.item_id;
+  gtag('event',name,{...safePage,...safe});
+ };
+ const script=document.createElement('script');script.async=true;script.src=`https://www.googletagmanager.com/gtag/js?id=${config.analytics.measurementId}`;document.head.append(script);
+}
 function consentValue(){try{return localStorage.getItem('copysprig-analytics-consent');}catch{return 'denied';}}
 if(config.analytics.mode==='ga4'){
  const box=document.querySelector('#analytics-consent');box.hidden=consentValue()!==null;if(consentValue()==='granted')loadAnalytics();
