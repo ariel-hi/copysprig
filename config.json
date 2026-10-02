@@ -3,8 +3,8 @@
   "siteUrl": "https://copysprig.web.app",
   "contactUrl": "https://github.com/ariel-hi/copysprig/issues",
   "analytics": {
-    "mode": "off",
-    "measurementId": ""
+    "mode": "ga4",
+    "measurementId": "G-XB3PW3VRJ0"
   },
   "ads": {
     "enabled": false,
@@ -14,6 +14,6 @@
   },
   "verification": {
     "google": "ZynZh35rAMLi2e2OdprcdTNyEMf9i-Tw_1x-5wSTGnk",
-    "bing": ""
+    "bing": "F1FFF42A6D570D1284FC00EE97C7FBC3"
   }
 }
