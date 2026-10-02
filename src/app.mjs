@@ -1,6 +1,7 @@
 import {STYLES,transformText,plainText} from './unicode.mjs';
-import {symbols} from './catalog.mjs';
+import {symbols,categories} from './catalog.mjs';
 import {copyText} from './copy.mjs';
+import {filterStyles,filterSymbols,pickItem} from './discovery.mjs';
 const data = JSON.parse(document.querySelector('#page-data').textContent);
 const input = document.querySelector('#text-input');
 // Keep the example out of the editable value so the first keystroke replaces it.
@@ -12,10 +13,14 @@ const toast = document.querySelector('#toast');
 const manual = document.querySelector('#manual-copy');
 const collection = document.querySelector('#collection');
 const collectionCount = document.querySelector('#collection-count');
+const styleCount = document.querySelector('#style-count');
+const pickButton = document.querySelector('#pick-style');
 const frames = [['stars','✦ ',' ✦'],['hearts','♡ ',' ♡'],['flowers','❀ ',' ❀'],['brackets','【 ',' 】'],['moon','☾ ',' ☽'],['plain','— ',' —']];
 const copiedTimers = new WeakMap();
 let toastTimer;
 let filter='all';
+let categoryFilter='all';
+let pickedStyleId;
 let favorites=read('copysprig-favorites',[]);
 let recent=read('copysprig-recent',[]);
 function read(key,fallback){try{const value=JSON.parse(localStorage.getItem(key));return Array.isArray(value)?value.filter(x=>typeof x==='string').slice(0,60):fallback;}catch{return fallback;}}
@@ -51,9 +56,85 @@ function enableCardCopy(article,button){
   });
 }
 function card(style,text){const article=document.createElement('article');article.className='result';article.id=`style-${style.id}`;const content=document.createElement('div');const label=document.createElement('div');label.className='result-label';const number=document.createElement('span');number.className='specimen-index';number.setAttribute('aria-hidden','true');number.textContent=String(specimenNumber(style.id)).padStart(2,'0');const name=document.createElement('span');name.textContent=style.label;label.append(number,name);const output=document.createElement('p');output.className='output';output.dir='auto';output.textContent=text;content.append(label,output);const actions=document.createElement('div');actions.className='result-actions';const c=document.createElement('button');c.className='copy';c.type='button';c.textContent='Copy';c.setAttribute('aria-label',`Copy ${style.label}`);c.disabled=!text;c.addEventListener('click',()=>copy(text,`style:${style.id}`,c));const s=document.createElement('button');s.type='button';s.className='save';s.dataset.save=`style:${style.id}`;s.dataset.name=style.label;s.addEventListener('click',()=>favorite(s.dataset.save));actions.append(c,s);article.append(content,actions);enableCardCopy(article,c);return article;}
-function renderStyles(){if(!results||!input)return;const value=previewText();document.querySelector('#character-count').textContent=`${Array.from(input.value).length} / 500 characters`;const fragment=document.createDocumentFragment();if(data.mode==='plain'){fragment.append(card({id:'plain',label:'Ordinary text'},plainText(value)));}else if(data.mode==='decorator'){const chosen=document.querySelector('#frame').value;frames.filter(f=>chosen==='all'||f[0]===chosen).forEach(([id,left,right])=>fragment.append(card({id:`frame-${id}`,label:`${id[0].toUpperCase()+id.slice(1)} frame`},value?`${left}${value}${right}`:'')));}else{const styles=STYLES.filter(s=>(!data.styleIds||data.styleIds.includes(s.id))&&(filter!=='saved'||favorites.includes(`style:${s.id}`)));styles.forEach(s=>fragment.append(card(s,transformText(value,s.id))));if(!styles.length){const p=document.createElement('p');p.className='empty';p.textContent='Save a style with the star button, then find it here.';fragment.append(p);}}
-results.replaceChildren(fragment);renderFavorites();renderShelf();}
-function renderSymbols(){if(!grid)return;const query=(search?.value??'').trim().toLowerCase();const candidates=symbols.filter(s=>(!data.category||s.category===data.category)&&(!query||`${s.name} ${s.tags} ${s.text}`.toLowerCase().includes(query))&&(filter!=='saved'||favorites.includes(`symbol:${s.id}`)));const frag=document.createDocumentFragment();candidates.forEach(s=>{const a=document.createElement('article');a.className='symbol-card';const b=document.createElement('button');b.type='button';b.className='symbol-copy';b.setAttribute('aria-label',`Copy ${s.name}`);const glyph=document.createElement('span');glyph.className='symbol-glyph';glyph.setAttribute('aria-hidden','true');glyph.textContent=s.text;const name=document.createElement('span');name.className='symbol-name';name.textContent=s.name;b.append(glyph,name);b.addEventListener('click',()=>copy(s.text,`symbol:${s.id}`,b));const foot=document.createElement('div');foot.className='symbol-footer';const hint=document.createElement('span');hint.textContent='Tap to copy';const save=document.createElement('button');save.className='save';save.type='button';save.dataset.save=`symbol:${s.id}`;save.dataset.name=s.name;save.addEventListener('click',()=>favorite(save.dataset.save));foot.append(hint,save);a.append(b,foot);frag.append(a);});grid.replaceChildren(frag);document.querySelector('#symbol-count').textContent=`${candidates.length} ${candidates.length===1?'item':'items'}`;document.querySelector('#symbol-empty').hidden=candidates.length>0;renderFavorites();}
+function updateCount(element,message){if(element&&element.textContent!==message)element.textContent=message;}
+function markPick(article){
+  article.classList.add('is-picked');
+  const label=document.createElement('span');
+  label.className='pick-label';label.textContent='Your pick';
+  article.querySelector('.result-label').append(label);
+}
+function renderStyles(){
+  if(!results||!input)return;
+  const value=previewText();
+  document.querySelector('#character-count').textContent=`${Array.from(input.value).length} / 500 characters`;
+  const fragment=document.createDocumentFragment();
+  let count=0;
+  if(data.mode==='plain'){
+    fragment.append(card({id:'plain',label:'Ordinary text'},plainText(value)));count=1;
+  }else if(data.mode==='decorator'){
+    const chosen=document.querySelector('#frame').value;
+    const selected=frames.filter(frame=>chosen==='all'||frame[0]===chosen);
+    selected.forEach(([id,left,right])=>fragment.append(card({id:`frame-${id}`,label:`${id[0].toUpperCase()+id.slice(1)} frame`},value?`${left}${value}${right}`:'')));
+    count=selected.length;
+  }else{
+    const available=STYLES.filter(style=>!data.styleIds||data.styleIds.includes(style.id));
+    const styles=filterStyles(available,{filter,favoriteIds:favorites});
+    styles.forEach(style=>{const result=card(style,transformText(value,style.id));if(style.id===pickedStyleId)markPick(result);fragment.append(result);});
+    count=styles.length;
+    if(!styles.some(style=>style.id===pickedStyleId))pickedStyleId=undefined;
+    if(!count){const p=document.createElement('p');p.className='empty';p.textContent=filter==='saved'?'No saved styles here yet. Use All styles and save a favorite with the star.':'No styles in this group on this page. Choose All styles to compare every look.';fragment.append(p);}
+  }
+  results.replaceChildren(fragment);
+  const noun=data.mode==='decorator'?'frame':data.mode==='plain'?'result':'style';
+  const group=filter==='all'||data.mode!=='styles'?'':`${filter} `;
+  updateCount(styleCount,`${count} ${group}${noun}${count===1?'':'s'}`);
+  if(pickButton)pickButton.disabled=count===0;
+  renderFavorites();renderShelf();
+}
+function renderSymbols(){
+  if(!grid)return;
+  const category=data.category||categoryFilter;
+  const candidates=filterSymbols(symbols,{query:search?.value,category,filter,favoriteIds:favorites});
+  const fragment=document.createDocumentFragment();
+  candidates.forEach(symbol=>{
+    const article=document.createElement('article');article.className='symbol-card';
+    if(['divider','face'].includes(symbol.category))article.classList.add('symbol-card-wide');
+    const button=document.createElement('button');button.type='button';button.className='symbol-copy';button.setAttribute('aria-label',`Copy ${symbol.name}`);
+    const glyph=document.createElement('span');glyph.className='symbol-glyph';glyph.setAttribute('aria-hidden','true');glyph.textContent=symbol.text;
+    const name=document.createElement('span');name.className='symbol-name';name.textContent=symbol.name;
+    button.append(glyph,name);button.addEventListener('click',()=>copy(symbol.text,`symbol:${symbol.id}`,button));
+    const footer=document.createElement('div');footer.className='symbol-footer';
+    const hint=document.createElement('span');hint.textContent='Tap to copy';
+    const save=document.createElement('button');save.className='save';save.type='button';save.dataset.save=`symbol:${symbol.id}`;save.dataset.name=symbol.name;save.addEventListener('click',()=>favorite(save.dataset.save));
+    footer.append(hint,save);article.append(button,footer);fragment.append(article);
+  });
+  grid.replaceChildren(fragment);
+  const categoryName=categories.find(item=>item.id===category)?.label.toLowerCase();
+  updateCount(document.querySelector('#symbol-count'),`${candidates.length} ${filter==='saved'?'saved ':''}${candidates.length===1?'symbol':'symbols'}${categoryName?` in ${categoryName}`:''}`);
+  const empty=document.querySelector('#symbol-empty');
+  empty.hidden=candidates.length>0;
+  const message=document.querySelector('#symbol-empty-message')||empty;
+  const scope=categoryName?` in ${categoryName}`:'';
+  const guidance=filter==='saved'?`No saved matches${scope}. Reset filters to see the collection, then star a favorite.`:`No matches${scope}. Try a shorter word or reset your search${!data.category?' and collection':''}.`;
+  if(message.textContent!==guidance)message.textContent=guidance;
+  renderFavorites();
+}
+function syncFilters(){
+  document.querySelectorAll('[data-filter]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.filter===filter)));
+  document.querySelectorAll('[data-category-filter]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.categoryFilter===categoryFilter)));
+}
+pickButton?.addEventListener('click',()=>{
+  const visible=Array.from(results.querySelectorAll('.result')).map(article=>({id:article.id.slice(6),article}));
+  const pick=pickItem(visible,pickedStyleId);
+  if(!pick)return;
+  results.querySelectorAll('.is-picked').forEach(article=>{article.classList.remove('is-picked','just-picked');article.querySelector('.pick-label')?.remove();});
+  pickedStyleId=pick.id;markPick(pick.article);pick.article.classList.add('just-picked');
+  setTimeout(()=>pick.article.classList.remove('just-picked'),650);
+  pick.article.querySelector('.copy').focus({preventScroll:true});
+  const reduceMotion=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  pick.article.scrollIntoView({behavior:reduceMotion?'instant':'smooth',block:'nearest'});
+  notify(`Your pick: ${STYLES.find(style=>style.id===pick.id)?.label||'a fresh look'}. Ready to copy.`);
+});
 function shelfItem(id){const [kind,key]=id.split(':');if(kind==='symbol'){const s=symbols.find(x=>x.id===key);if(!s)return;const b=document.createElement('button');b.className='shelf-item';b.dataset.itemId=id;b.type='button';b.textContent=s.text;b.setAttribute('aria-label',`Copy ${s.name}`);b.addEventListener('click',()=>copy(s.text,id,b));return b;}if(kind==='style'){const special=key==='plain'?{id:key,label:'Ordinary text',href:'/plain-text/'}:key.startsWith('frame-')?{id:key,label:`${key.slice(6)} frame`,href:'/text-decorator/'}:null;const s=STYLES.find(x=>x.id===key)||special;if(!s)return;const copiesHere=input&&data.mode==='styles'&&(!data.styleIds||data.styleIds.includes(s.id))&&!special;const b=document.createElement(copiesHere?'button':'a');b.className='shelf-item';b.dataset.itemId=id;b.textContent=s.label;if(copiesHere){b.type='button';b.setAttribute('aria-label',`Copy ${s.label}`);b.addEventListener('click',()=>copy(transformText(previewText(),s.id),id,b));}else b.href=s.href||`/#style-${s.id}`;return b;}}
 function renderShelf(){for(const [id,list]of [['saved-list',favorites],['recent-list',recent]]){const el=document.querySelector(`#${id}`);if(!el)continue;const previous=new Map(Array.from(el.children,b=>[b.dataset.itemId,b]));const nodes=list.map(id=>previous.get(id)||shelfItem(id)).filter(Boolean);nodes.forEach(node=>{if(node.tagName==='BUTTON'&&node.dataset.itemId.startsWith('style:'))node.disabled=!input||!previewText();});if(id==='saved-list'&&collectionCount)collectionCount.textContent=`${nodes.length} saved`;if(!nodes.length){const p=document.createElement('p');p.textContent=id==='saved-list'?'Use a star to save a style or symbol.':'Your copied styles and symbols appear here.';el.replaceChildren(p);}else if(nodes.length!==el.children.length||nodes.some((node,i)=>node!==el.children[i]))el.replaceChildren(...nodes);}}
 input?.addEventListener('input',renderStyles);
@@ -63,7 +144,9 @@ document.querySelector('#clear-text')?.addEventListener('click',()=>{input.value
 document.querySelector('#restore-example')?.addEventListener('click',()=>{input.value='';renderStyles();input.focus();});
 document.querySelector('#clear-history')?.addEventListener('click',()=>{recent=[];write('copysprig-recent',recent);renderShelf();notify('Recent selections cleared.');});
 document.querySelector('#clear-favorites')?.addEventListener('click',()=>{favorites=[];write('copysprig-favorites',favorites);renderShelf();renderFavorites();if(grid)renderSymbols();if(results)renderStyles();notify('Saved selections cleared.');});
-document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));if(results)renderStyles();if(grid)renderSymbols();}));
+document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{filter=button.dataset.filter;syncFilters();if(results)renderStyles();if(grid)renderSymbols();}));
+document.querySelectorAll('[data-category-filter]').forEach(button=>button.addEventListener('click',()=>{categoryFilter=button.dataset.categoryFilter;syncFilters();renderSymbols();}));
+document.querySelector('#reset-symbols')?.addEventListener('click',()=>{if(search)search.value='';filter='all';categoryFilter='all';syncFilters();renderSymbols();search?.focus();});
 manual?.querySelector('button')?.addEventListener('click',()=>manual.close());
 // Categories start closed on every screen; opening them is an explicit choice.
 // Only the secondary collection expands automatically on desktop.
