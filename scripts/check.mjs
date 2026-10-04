@@ -65,6 +65,19 @@ for (const route of routes) {
   if (!config.ads.enabled) ensure(!/id="ad-placement"|class="adsbygoogle"/.test(html), `Inactive ads show an ad placement: ${route.path}`);
 }
 
+// Follow real HTML links from home; a sitemap alone must not hide orphan tools.
+const routePaths = new Set(routes.map(route => route.path));
+const graph = new Map(htmlFiles.map(({html, route}) => [route.path, tags(html, 'a').flatMap(tag => {
+  try { const target = new URL(tag.href, origin + route.path); return target.origin === origin && routePaths.has(target.pathname) ? [target.pathname] : []; }
+  catch { return []; }
+})]));
+const reached = new Set(['/']);
+const queue = ['/'];
+for (const current of queue) for (const target of graph.get(current) || []) {
+  if (!reached.has(target)) { reached.add(target); queue.push(target); }
+}
+for (const route of routes) ensure(reached.has(route.path), `Page cannot be reached through HTML links from home: ${route.path}`);
+
 const errorHtml = await readFile(resolve(dist, '404.html'), 'utf8');
 ensure(/noindex/.test(meta(errorHtml, 'robots') ?? ''), 'The 404 page must be noindex.');
 ensure(!tags(errorHtml, 'link').some((tag) => tag.rel === 'canonical'), '404 page must not canonicalize to a normal page.');
