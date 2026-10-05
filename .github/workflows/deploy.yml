@@ -37,6 +37,8 @@ jobs:
           projectId: copysprig
           channelId: live
           firebaseToolsVersion: '15.12.0'
+      - name: Allow CDN propagation
+        run: sleep 45
       - name: Verify public production routes
         run: npm run health
       - name: Notify IndexNow
