@@ -95,6 +95,31 @@
     "kind": "utility"
   },
   {
+    "path": "/instagram-fonts/",
+    "title": "Instagram fonts generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/tiktok-fonts/",
+    "title": "TikTok fonts generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/discord-fonts/",
+    "title": "Discord fonts generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/twitter-fonts/",
+    "title": "X (Twitter) fonts generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/facebook-fonts/",
+    "title": "Facebook fonts generator",
+    "kind": "utility"
+  },
+  {
     "path": "/symbols/",
     "title": "Symbols to copy and paste",
     "kind": "utility"

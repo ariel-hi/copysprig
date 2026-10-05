@@ -39,3 +39,6 @@ jobs:
           firebaseToolsVersion: '15.12.0'
       - name: Verify public production routes
         run: npm run health
+      - name: Notify IndexNow
+        run: npm run indexnow
+        continue-on-error: true
