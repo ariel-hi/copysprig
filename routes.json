@@ -81,7 +81,7 @@
   },
   {
     "path": "/style-mixer/",
-    "title": "Unicode style mixer",
+    "title": "Fancy text style mixer",
     "kind": "utility"
   },
   {
@@ -91,7 +91,7 @@
   },
   {
     "path": "/plain-text/",
-    "title": "Plain text recovery",
+    "title": "Fancy text to normal text converter",
     "kind": "utility"
   },
   {
@@ -126,47 +126,47 @@
   },
   {
     "path": "/heart-symbols/",
-    "title": "Hearts to copy and paste",
+    "title": "Heart symbols to copy and paste",
     "kind": "utility"
   },
   {
     "path": "/star-symbols/",
-    "title": "Stars to copy and paste",
+    "title": "Star symbols to copy and paste",
     "kind": "utility"
   },
   {
     "path": "/arrow-symbols/",
-    "title": "Arrows to copy and paste",
+    "title": "Arrow symbols to copy and paste",
     "kind": "utility"
   },
   {
     "path": "/flower-symbols/",
-    "title": "Flowers to copy and paste",
+    "title": "Flower symbols to copy and paste",
     "kind": "utility"
   },
   {
     "path": "/moon-symbols/",
-    "title": "Moons & sky to copy and paste",
+    "title": "Moon & sky symbols to copy and paste",
     "kind": "utility"
   },
   {
     "path": "/bracket-symbols/",
-    "title": "Brackets to copy and paste",
+    "title": "Bracket symbols to copy and paste",
     "kind": "utility"
   },
   {
     "path": "/music-symbols/",
-    "title": "Music to copy and paste",
+    "title": "Music note symbols to copy and paste",
     "kind": "utility"
   },
   {
     "path": "/dividers/",
-    "title": "Dividers to copy and paste",
+    "title": "Text dividers to copy and paste",
     "kind": "utility"
   },
   {
     "path": "/kaomoji/",
-    "title": "Kaomoji to copy and paste",
+    "title": "Kaomoji text faces to copy and paste",
     "kind": "utility"
   },
   {
