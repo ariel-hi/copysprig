@@ -268,6 +268,19 @@ test('Discord message copying wraps nonblank lines, preserves Unicode and sends 
   assert.equal(env.get('#discord-message-preview').textContent, ' \n\t');
 });
 
+test('Discord offers both bold alphabets alongside script while search and Saved keep their route scope', async () => {
+  const env = environment({ styleIds: ['bold', 'sans-bold', 'bold-script'], favorites: ['style:bold-script', 'style:sans-bold', 'style:circled'] });
+  const ids = () => env.get('#results').querySelectorAll('.result').map(card => card.dataset.itemId);
+  assert.deepEqual(ids(), ['style:bold', 'style:bold-script', 'style:sans-bold']);
+  await env.get('#filter-saved').click();
+  assert.deepEqual(ids(), ['style:bold-script', 'style:sans-bold']);
+  await env.set('style-search', 'sans', 'input');
+  assert.deepEqual(ids(), ['style:sans-bold']);
+  await env.set('text-input', 'Nova 8', 'input');
+  await env.get('#style-sans-bold').querySelector('.copy').click();
+  assert.equal(env.copied.at(-1), '𝗡𝗼𝘃𝗮 𝟴');
+});
+
 test('Discord message copying offers the same exact manual fallback without saving text', async () => {
   const env = environment({ message: true, copyOutcome: 'manual' });
   await env.set('text-input', 'A small announcement 🌸', 'input');
