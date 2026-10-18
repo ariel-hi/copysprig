@@ -8,6 +8,8 @@ Browse five style families, search names and coverage notes, or combine letterin
 
 Copy tool link shares the canonical page URL without entered text or URL state. The homepage's Fonts by app disclosure links directly to the five app-specific tools. Both features work without analytics, and link copying offers manual selection if the browser blocks the clipboard.
 
+Bold, cursive and Discord tools include compact Bio, Heading and Name examples. A preset fills the editable input and restores visible route results; it never copies automatically or saves the phrase. Ordinary labels and worked examples remain readable in the static HTML. Discord also offers a closed chat-message helper that wraps each nonblank line in native bold Markdown, with the same clipboard/manual-copy fallback. Existing Markdown and mentions remain active. This helper does not save custom messages or invent a saved style ID.
+
 ## Run and verify
 
 Node 22+; launch verified locally with Node 22.16.0/npm 10.9.2. CI uses Node 24. There are no npm package dependencies; package-lock.json locks the empty dependency graph. Firebase CLI 15.12.0 is pinned in CI.

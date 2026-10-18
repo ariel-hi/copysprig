@@ -26,6 +26,9 @@ const collection = document.querySelector('#collection');
 const collectionCount = document.querySelector('#collection-count');
 const styleCount = document.querySelector('#style-count');
 const pickButton = document.querySelector('#pick-style');
+const exampleButtons = document.querySelectorAll('[data-use-case]');
+const messagePreview = document.querySelector('#discord-message-preview');
+const messageCopy = document.querySelector('#copy-discord-message');
 const frames = FRAMES.filter(frame=>frame.id!=='none').map(({id,left,right})=>[id,left,right]);
 const copiedTimers = new WeakMap();
 let toastTimer;
@@ -67,7 +70,26 @@ function favorite(id){
 function renderFavorites(){document.querySelectorAll('[data-save]').forEach(b=>{const yes=favorites.includes(b.dataset.save);b.setAttribute('aria-pressed',String(yes));b.textContent=yes?'★':'☆';b.setAttribute('aria-label',`${yes?'Unsave':'Save'} ${b.dataset.name}`);});}
 function record(id){recent=[id,...recent.filter(x=>x!==id)].slice(0,8);write('copysprig-recent',recent);renderShelf();}
 function copied(button){if(!button)return;clearTimeout(copiedTimers.get(button));button.dataset.copied='true';copiedTimers.set(button,setTimeout(()=>{delete button.dataset.copied;copiedTimers.delete(button);},1800));}
-async function copy(value,id,button){const outcome=await copyText(value);if(outcome==='manual'){const field=manual.querySelector('textarea');field.value=value;manual.showModal();field.focus();field.select();notify('Select the text and use your device’s copy command.');return;}record(id);notify('Copied. Ready to paste.');copied(button);event('copy',{item_kind:id.startsWith('symbol:')?'symbol':'style',item_id:id.startsWith('mix:')?'style:mixed':id});}
+async function copy(value,id,button){const outcome=await copyText(value);if(outcome==='manual'){const field=manual.querySelector('textarea');field.value=value;manual.showModal();field.focus();field.select();notify('Select the text and use your device’s copy command.');return;}if(id)record(id);notify('Copied. Ready to paste.');copied(button);if(id)event('copy',{item_kind:id.startsWith('symbol:')?'symbol':'style',item_id:id.startsWith('mix:')?'style:mixed':id});}
+// Keep original characters and blank lines; Discord interprets the delimiters.
+// Existing Markdown and mentions deliberately remain visible and active.
+function discordMessage(text){return text.split(/(\r\n|\r|\n)/).map((part,index)=>index%2?part:part.replace(/^(\s*)(.*?)(\s*)$/u,(_,before,words,after)=>words?`${before}**${words}**${after}`:part)).join('');}
+function renderMessage(){if(!messagePreview||!input)return;messagePreview.textContent=discordMessage(previewText());messageCopy.disabled=!previewText().trim();}
+messageCopy?.addEventListener('click',()=>copy(discordMessage(previewText()),null,messageCopy));
+function clearExampleSelection(){exampleButtons.forEach(button=>button.setAttribute('aria-pressed','false'));}
+exampleButtons.forEach(button=>{
+  const example=data.useCases?.find(item=>item.id===button.dataset.useCase);
+  if(!example||!input)return;
+  button.disabled=false;
+  button.addEventListener('click',()=>{
+    input.value=example.text;
+    if(styleSearch)styleSearch.value='';if(styleFamily)styleFamily.value='all';
+    filter='all';pickedItemId=undefined;syncFilters();clearExampleSelection();
+    button.setAttribute('aria-pressed','true');renderStyles();
+    input.focus({preventScroll:true});input.select();
+    notify(`${example.label} example loaded. Edit it or copy a result.`);
+  });
+});
 function specimenNumber(id){const index=STYLES.findIndex(s=>s.id===id);if(index>=0)return index+1;const frame=frames.findIndex(f=>`frame-${f[0]}`===id);return frame>=0?frame+1:1;}
 function enableCardCopy(article,button){
   article.dataset.copyable=String(!button.disabled);
@@ -121,6 +143,7 @@ function markPick(article){
 }
 function renderStyles(){
   if(!input)return;document.querySelector('#character-count').textContent=Array.from(input.value).length+' / 500 characters';
+  renderMessage();
   renderMixer();if(!results){renderShelf();return;}
   const value=previewText();const fragment=document.createDocumentFragment();
   let count=0;
@@ -200,7 +223,7 @@ function shelfItem(id){
   if(kind==='style'){const special=key==='plain'?{id:key,label:'Ordinary text',href:'/plain-text/'}:key.startsWith('frame-')?{id:key,label:`${key.slice(6)} frame`,href:'/text-decorator/'}:null;const s=STYLES.find(x=>x.id===key)||special;if(!s)return;const copiesHere=input&&['styles','mixer'].includes(data.mode)&&(!data.styleIds||data.styleIds.includes(s.id))&&!special;const b=document.createElement(copiesHere?'button':'a');b.className='shelf-item';b.dataset.itemId=id;b.textContent=s.label;if(copiesHere){b.type='button';b.setAttribute('aria-label',`Copy ${s.label}`);b.addEventListener('click',()=>copy(transformText(previewText(),s.id),id,b));}else b.href=s.href||`/#style-${s.id}`;return b;}
 }
 function renderShelf(){for(const [id,list]of [['saved-list',favorites],['recent-list',recent]]){const el=document.querySelector(`#${id}`);if(!el)continue;const previous=new Map(Array.from(el.children,b=>[b.dataset.itemId,b]));const nodes=list.map(id=>previous.get(id)||shelfItem(id)).filter(Boolean);nodes.forEach(node=>{if(node.tagName==='BUTTON'&&node.dataset.itemId.startsWith('style:'))node.disabled=!input||!previewText();});if(id==='saved-list'&&collectionCount)collectionCount.textContent=`${nodes.length} saved`;if(!nodes.length){const p=document.createElement('p');p.textContent=id==='saved-list'?'Use a star to save a style or symbol.':'Your copied styles and symbols appear here.';el.replaceChildren(p);}else if(nodes.length!==el.children.length||nodes.some((node,i)=>node!==el.children[i]))el.replaceChildren(...nodes);}}
-input?.addEventListener('input',renderStyles);
+input?.addEventListener('input',()=>{clearExampleSelection();renderStyles();});
 styleSearch?.addEventListener('input',renderStyles);
 styleFamily?.addEventListener('change',renderStyles);
 for(const id of ['mix-style','mix-effect','mix-frame'])document.querySelector('#'+id)?.addEventListener('change',renderMixer);

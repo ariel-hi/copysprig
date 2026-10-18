@@ -1,4 +1,4 @@
-import {categories} from './catalog.mjs?v=a7835d02626f';
+import {categories} from './catalog.mjs?v=213ec359fec8';
 
 const categoryWords = new Map(categories.map(category=>[category.id,`${category.id} ${category.label} ${category.path.replace(/-/g,' ')}`.toLowerCase()]));
 

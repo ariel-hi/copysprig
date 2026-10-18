@@ -11,7 +11,7 @@ import * as discovery from '../src/discovery.mjs';
 // The real transformation exports are used; copyText is the external boundary.
 const source = (await readFile(new URL('../src/app.mjs', import.meta.url), 'utf8')).replace(/^import .+;\r?\n/gm, '');
 
-function environment({ mode = 'styles', category, favorites = [], hash = '', copyOutcome = 'clipboard', reduceMotion = false } = {}) {
+function environment({ mode = 'styles', category, styleIds, useCases = [], message = false, favorites = [], hash = '', copyOutcome = 'clipboard', reduceMotion = false } = {}) {
   const writes = [];
   const copied = [];
   const tracked = [];
@@ -131,7 +131,7 @@ function environment({ mode = 'styles', category, favorites = [], hash = '', cop
     parent.append(node);
     return node;
   }
-  element('page-data').textContent = JSON.stringify({ mode, category, example: 'Make something lovely' });
+  element('page-data').textContent = JSON.stringify({ mode, category, styleIds, useCases, example: 'Make something lovely' });
   element('toast');
   element('share-tool', 'button').dataset.url = 'https://copysprig.com/bold-text/';
   element('saved-list');
@@ -143,6 +143,16 @@ function environment({ mode = 'styles', category, favorites = [], hash = '', cop
 
   if (mode === 'styles' || mode === 'mixer') {
     element('text-input', 'textarea');
+    for (const example of useCases) {
+      const button = element('example-' + example.id, 'button');
+      button.dataset.useCase = example.id;
+      button.disabled = true;
+      button.textContent = example.label;
+    }
+    if (message) {
+      element('discord-message-preview', 'code');
+      element('copy-discord-message', 'button').textContent = 'Copy message Markdown';
+    }
     element('character-count');
     const mixer = element('style-mixer', 'details');
     element('mix-style', 'select', mixer).value = 'sans-bold';
@@ -208,6 +218,67 @@ function environment({ mode = 'styles', category, favorites = [], hash = '', cop
     },
   };
 }
+
+test('use-case examples restore visible route styles without copying, persisting or tracking text', async () => {
+  const env = environment({ styleIds: ['bold', 'sans-bold'], useCases: [{ id: 'name', label: 'Name', text: 'Alex Morgan' }] });
+  await env.get('#filter-saved').click();
+  await env.set('style-family', 'enclosed');
+  await env.set('style-search', 'nothing matches', 'input');
+  assert.equal(env.get('#results').querySelectorAll('.result').length, 0);
+  const button = env.get('#example-name');
+  assert.equal(button.disabled, false);
+  await button.click();
+  assert.equal(env.get('#text-input').value, 'Alex Morgan');
+  assert.equal(env.get('#style-family').value, 'all');
+  assert.equal(env.get('#style-search').value, '');
+  assert.equal(env.get('#filter-all').getAttribute('aria-pressed'), 'true');
+  assert.equal(env.get('#results').querySelectorAll('.result').length, 2);
+  assert.equal(env.get('#style-bold').querySelector('.output').textContent, '𝐀𝐥𝐞𝐱 𝐌𝐨𝐫𝐠𝐚𝐧');
+  assert.equal(button.getAttribute('aria-pressed'), 'true');
+  assert.equal(env.document.activeElement, env.get('#text-input'));
+  assert.equal(env.get('#text-input').selected, true);
+  assert.deepEqual(env.copied, []);
+  assert.deepEqual(env.writes, []);
+  assert.deepEqual(env.tracked, []);
+  await env.set('text-input', 'Alex café 👩‍🚀 中文', 'input');
+  assert.equal(button.getAttribute('aria-pressed'), 'false');
+  await env.get('#style-bold').querySelector('.copy').click();
+  assert.equal(env.copied.at(-1), '𝐀𝐥𝐞𝐱 𝐜𝐚𝐟é 👩‍🚀 中文');
+  assert.deepEqual(JSON.parse(env.stored.get('copysprig-recent')), ['style:bold']);
+  assert.equal(env.tracked.at(-1).attributes.item_id, 'style:bold');
+  assert.ok(!JSON.stringify([...env.writes, ...env.tracked]).includes('Alex'));
+});
+
+test('Discord message copying wraps nonblank lines, preserves Unicode and sends no phrase or synthetic style ID', async () => {
+  const env = environment({ message: true });
+  const text = '  Hello 🌙  \r\n\r\n\tcafé 中文\t\nA *note*';
+  const expected = '  **Hello 🌙**  \r\n\r\n\t**café 中文**\t\n**A *note***';
+  await env.set('text-input', text, 'input');
+  assert.equal(env.get('#discord-message-preview').textContent, expected);
+  const button = env.get('#copy-discord-message');
+  await button.click();
+  assert.deepEqual(env.copied, [expected]);
+  assert.equal(button.textContent, 'Copy message Markdown');
+  assert.equal(button.dataset.copied, 'true');
+  assert.equal(env.get('#text-input').value, text);
+  assert.deepEqual(env.writes, []);
+  assert.deepEqual(env.tracked, []);
+  await env.set('text-input', ' \n\t', 'input');
+  assert.equal(button.disabled, true, 'whitespace cannot copy a stale message');
+  assert.equal(env.get('#discord-message-preview').textContent, ' \n\t');
+});
+
+test('Discord message copying offers the same exact manual fallback without saving text', async () => {
+  const env = environment({ message: true, copyOutcome: 'manual' });
+  await env.set('text-input', 'A small announcement 🌸', 'input');
+  await env.get('#copy-discord-message').click();
+  assert.equal(env.get('#manual-copy').open, true);
+  assert.equal(env.get('#manual-field').value, '**A small announcement 🌸**');
+  assert.equal(env.document.activeElement, env.get('#manual-field'));
+  assert.equal(env.get('#manual-field').selected, true);
+  assert.deepEqual(env.writes, []);
+  assert.deepEqual(env.tracked, []);
+});
 
 test('sharing copies only the canonical tool link without storing or tracking a useful copy', async () => {
   const env = environment({hash:'#private-phrase'});
