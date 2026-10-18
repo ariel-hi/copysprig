@@ -27,8 +27,30 @@ function validate(data, name) {
   const date = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value)) && new Date(value).toISOString().slice(0,10) === value;
   if (!date(data.period?.start) || !date(data.period?.end) || data.period.start > data.period.end || typeof data.period.timeZone !== 'string' || !data.period.timeZone.trim()) throw new Error(`${name}: period needs valid start/end YYYY-MM-DD dates in order and timeZone.`);
   if (data.scope != null && typeof data.scope !== 'string') throw new Error(`${name}: scope must be a string.`);
-  const fields = name === 'analytics' ? ['visits','pageviews','usefulInteractions'] : name === 'ads' ? ['monetizedPageviews'] : ['clicks','impressions'];
+  const fields = name === 'analytics' ? ['visits','pageviews','usefulInteractions','successfulCopySessions'] : name === 'ads' ? ['monetizedPageviews'] : ['clicks','impressions'];
   for (const field of fields) number(data[field], `${name}.${field}`);
+  const hasCopyDefinition = typeof data.copySessionDefinition === 'string' && !!data.copySessionDefinition.trim();
+  if (name === 'analytics' && data.successfulCopySessions != null) {
+    if (data.visits == null || data.successfulCopySessions > data.visits) throw new Error('analytics: successfulCopySessions requires visits from the same scope and cannot exceed visits.');
+    if (!hasCopyDefinition) throw new Error('analytics: copySessionDefinition must document the session segment and matching denominator.');
+  }
+  if (name === 'analytics' && data.acquisitionChannels != null) {
+    if (!Array.isArray(data.acquisitionChannels)) throw new Error('analytics.acquisitionChannels must be an array.');
+    const channels = new Set();
+    let visits = 0, copySessions = 0;
+    for (const row of data.acquisitionChannels) {
+      if (!row || typeof row.channel !== 'string' || !row.channel.trim()) throw new Error('analytics: each acquisition channel needs a name.');
+      const channel = row.channel.trim();
+      if (channels.has(channel)) throw new Error('analytics: acquisition channels must be distinct rows from one session acquisition dimension.');
+      channels.add(channel);
+      number(row.visits, 'channel.visits');number(row.successfulCopySessions, 'channel.successfulCopySessions');
+      if (row.successfulCopySessions != null && (row.visits == null || row.successfulCopySessions > row.visits || !hasCopyDefinition)) throw new Error('analytics: channel copy sessions need a matching denominator and definition.');
+      visits += row.visits ?? 0;
+      copySessions += row.successfulCopySessions ?? 0;
+    }
+    if (data.visits != null && visits > data.visits) throw new Error('analytics: acquisition channel sessions cannot exceed the same-scope visits total.');
+    if (data.successfulCopySessions != null && copySessions > data.successfulCopySessions) throw new Error('analytics: acquisition channel copy sessions cannot exceed the same-scope successfulCopySessions total.');
+  }
   if (name === 'analytics' && data.usefulInteractions != null && (typeof data.interactionDefinition !== 'string' || !data.interactionDefinition.trim())) throw new Error('analytics: interactionDefinition must describe exactly which event counts were included.');
   if (name === 'ads') {
     number(data.earnings, 'ads.earnings', false);
@@ -61,6 +83,8 @@ const metrics = {
   visits: from('analytics', 'visits', 'GA4 sessions (visits)'),
   pageviews: from('analytics', 'pageviews', 'GA4 page views'),
   usefulInteractions: from('analytics', 'usefulInteractions', 'Useful interactions'),
+  successfulCopySessions: from('analytics', 'successfulCopySessions', 'Sessions with a successful copy'),
+  acquisitionChannels: from('analytics', 'acquisitionChannels', 'Session acquisition channels'),
   organicClicks: {google: from('search-console','clicks'), bing: from('bing','clicks')},
   searchImpressions: {google: from('search-console','impressions'), bing: from('bing','impressions')},
   topLandingPages: {
@@ -72,6 +96,11 @@ const metrics = {
   pageRpm: from('ads','pageRpm')
 };
 if (sources.analytics.data?.interactionDefinition) metrics.usefulInteractions.definition = sources.analytics.data.interactionDefinition;
+const analytics = sources.analytics.data;
+if (analytics?.copySessionDefinition) metrics.successfulCopySessions.definition = analytics.copySessionDefinition;
+metrics.successfulCopySessionRate = analytics?.successfulCopySessions != null && analytics.visits > 0
+  ? {...metric(100 * analytics.successfulCopySessions / analytics.visits, 'Successful-copy session rate', analytics, analytics.source), status: 'derived', unit: 'percent', definition: analytics.copySessionDefinition}
+  : unavailable('Needs matching measured copy sessions and a positive session denominator.');
 const ads = sources.ads.data;
 if (ads?.currency) {
   metrics.adEarnings.currency = ads.currency;
@@ -93,6 +122,7 @@ const notes = [
   'Visits mean GA4 sessions. Consent, blockers, filters, timezone and attribution can limit observed totals.',
   'Google and Bing clicks/impressions remain separate. Search Console page rows can differ from property totals; row lists are not assumed complete.',
   'Useful interactions are event counts with the imported definition; they do not represent unique people or prove satisfaction.',
+  'Copy-session rates use distinct sessions with a successful copy and the matching session denominator, never total copy events. Channel rows may be a partial export; they are not assumed to cover all sessions.',
   'Ad earnings may be estimated, not paid revenue; page RPM uses the ad platform denominator, not GA4 visits.',
   'Health is a timestamped technical observation, not an uptime history or proof of indexation.'
 ];
@@ -101,7 +131,12 @@ const report = {schemaVersion: 1, generatedAt, metrics, health, sources: Object.
 const format = value => value.value == null ? `Unavailable (${value.reason})` : Array.isArray(value.value) ? `${value.value.length} imported rows` : `${typeof value.value === 'number' ? value.value.toLocaleString('en-US', {maximumFractionDigits: 2}) : value.value}${value.currency ? ` ${value.currency}` : ''} [${value.status}]`;
 const rows = [['Visits (GA4 sessions)',metrics.visits],['Page views',metrics.pageviews],['Google organic clicks',metrics.organicClicks.google],['Google search impressions',metrics.searchImpressions.google],['Bing clicks',metrics.organicClicks.bing],['Bing impressions',metrics.searchImpressions.bing],['Useful interactions',metrics.usefulInteractions],['Top landing pages: GA4',metrics.topLandingPages.analytics],['Top pages: Google',metrics.topLandingPages.google],['Top pages: Bing',metrics.topLandingPages.bing],['Ad earnings',metrics.adEarnings],['Page RPM',metrics.pageRpm]];
 const clean = value => String(value).replace(/\|/g, '\\|').replace(/[\r\n]+/g, ' ');
+rows.splice(7, 0, ['Sessions with a successful copy',metrics.successfulCopySessions], ['Successful-copy session rate (%)',metrics.successfulCopySessionRate]);
 let markdown = `# CopySprig operating report\n\nGenerated ${generatedAt}. No network requests were made.\n\n| Metric | Value |\n| --- | --- |\n${rows.map(([label,value]) => `| ${label} | ${clean(format(value))} |`).join('\n')}\n\n`;
+if (Array.isArray(metrics.acquisitionChannels.value)) {
+  const value = metrics.acquisitionChannels;
+  markdown += `## Acquisition channels (same GA4 export scope)\n\nSource: ${clean(value.source)}; ${value.period.start} to ${value.period.end} (${clean(value.period.timeZone)}). Scope: ${clean(value.scope)}.\n\n${analytics.copySessionDefinition ? `Copy-session definition: ${clean(analytics.copySessionDefinition)}.\n\n` : ''}| Session channel / source | Sessions | Sessions with a copy | Copy-session rate |\n| --- | --- | --- | --- |\n${value.value.map(row=>`| ${clean(row.channel)} | ${row.visits ?? 'Unavailable'} | ${row.successfulCopySessions ?? 'Unavailable'} | ${row.visits > 0 && row.successfulCopySessions != null ? (100*row.successfulCopySessions/row.visits).toFixed(1)+'%' : 'Unavailable'} |`).join('\n')}\n\n`;
+}
 for (const [name, value] of Object.entries(metrics.topLandingPages)) {
   if (!Array.isArray(value.value) || !value.value.length) continue;
   const keys = name === 'analytics' ? ['visits','usefulInteractions'] : ['clicks','impressions'];

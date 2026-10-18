@@ -2,9 +2,11 @@
 
 [Live utility](https://copysprig.com/) · [Project contact](https://github.com/ariel-hi/copysprig/issues)
 
-Free browser tools for short creator profile text: 29 utility routes, 34 curated Unicode styles and 125 named symbols, dividers and kaomoji. There are 34 indexable pages including the guide and site information. Text processing stays in the browser; favorites and recents store selection identifiers locally, never entered phrases. No visitor accounts, database or per-use API.
+Free browser tools for short creator profile text: 34 utility routes, 34 curated Unicode styles and 125 named symbols, dividers and kaomoji. There are 39 indexable pages including the guide and site information. Text processing stays in the browser; favorites and recents store selection identifiers locally, never entered phrases. No visitor accounts, database or per-use API.
 
 Browse five style families, search names and coverage notes, or combine lettering, an optional effect and a frame in the style mixer. The mixer shows the complete output count and saves only the selected settings. Twelve decorative frames are available in the mixer and text decorator; the mixer also offers no frame. Focused tools cover tiny text, square text, upside-down text, glitch effects and three underline variants.
+
+Copy tool link shares the canonical page URL without entered text or URL state. The homepage's Fonts by app disclosure links directly to the five app-specific tools. Both features work without analytics, and link copying offers manual selection if the browser blocks the clipboard.
 
 ## Run and verify
 

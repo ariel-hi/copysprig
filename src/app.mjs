@@ -38,6 +38,20 @@ function read(key,fallback){try{const value=JSON.parse(localStorage.getItem(key)
 function write(key,value){try{localStorage.setItem(key,JSON.stringify(value));}catch{notify('Storage is unavailable. Copying still works.');}}
 function notify(message){clearTimeout(toastTimer);toast.textContent=message;toastTimer=setTimeout(()=>{toast.textContent='';},3500);}
 function event(name,attributes={}){if(window.copysprigTrack)window.copysprigTrack(name,attributes);}
+// Share only the build's canonical tool URL, never visitor input or URL state.
+const shareTool=document.querySelector('#share-tool');
+if(shareTool){
+ shareTool.disabled=false;
+ shareTool.addEventListener('click',async()=>{
+  const outcome=await copyText(shareTool.dataset.url);
+  if(outcome==='manual'){
+   const field=manual.querySelector('textarea');field.value=shareTool.dataset.url;
+   manual.showModal();field.focus();field.select();
+   notify('Select the tool link and copy it.');return;
+  }
+  notify('Tool link copied. Your text is not included.');copied(shareTool);
+ });
+}
 function favorite(id){
   const active=document.activeElement;
   const container=active?.closest('#mixer-result')||grid||results;

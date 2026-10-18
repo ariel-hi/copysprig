@@ -27,11 +27,20 @@ Save `analytics.json` using actual report dates. The dates below show format onl
   "pageviews": null,
   "usefulInteractions": null,
   "interactionDefinition": "copy event count plus favorite_toggle event count; event counts, not unique users",
+  "successfulCopySessions": null,
+  "copySessionDefinition": null,
+  "acquisitionChannels": null,
   "topLandingPages": null
 }
 ```
 
 When measured, `topLandingPages` is an array of `{"path":"/bold-text/","visits":<real integer>,"usefulInteractions":<real integer or null>}`. Sort actual rows by sessions before import. An empty array means the exported report had no rows, so use it only when verified. Consent/blockers and data-quality flags limit coverage; a visit is a session, not a person. Retain filter and timezone context rather than comparing unlike windows.
+
+For copy-session measurement, export the distinct sessions containing at least one successful `copy` event as `successfulCopySessions`. Repeated events in one session count once. `visits` must be the matching session denominator from the same dates, consent coverage and filters; use the same tool-session cohort when evaluating tool conversion. Document the segment, denominator and operator exclusions in a nonempty `copySessionDefinition` string and describe the overall cohort in `scope`. Never substitute event counts or Search Console clicks. If a session-scoped export or matching denominator is unavailable, leave `successfulCopySessions` null. The report derives `100 × successfulCopySessions / visits` only with a positive denominator; measured zero copies remains 0%, while zero sessions leaves the rate unavailable. The numerator cannot exceed `visits`.
+
+Optional `acquisitionChannels` rows use `{"channel":"Organic Search","visits":<real integer or null>,"successfulCopySessions":<real integer or null>}`. Use one **session-scoped** acquisition dimension throughout, such as Session default channel group or Session source / medium; retain its exact name in `scope`. Do not combine overlapping dimensions, repeat a channel row, or use first-user acquisition counts. Each measured row numerator needs its own matching positive-or-zero session count and the same `copySessionDefinition`. Unknown counts remain null, and partial/top-row exports are allowed; the report does not infer omitted rows or totals. Imported row sums cannot exceed available same-scope overall session or copy-session totals. Channel rates use their row denominator and remain unavailable for missing or zero denominators.
+
+These rates describe the consenting observed cohort. They do not establish total human traffic or business conversions. Under the current growth plan, wait for at least 100 consenting tool sessions before evaluating the provisional successful-copy-session target, even when a smaller export permits arithmetic.
 
 ## Google Search Console and Bing
 

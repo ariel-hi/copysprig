@@ -133,6 +133,7 @@ function environment({ mode = 'styles', category, favorites = [], hash = '', cop
   }
   element('page-data').textContent = JSON.stringify({ mode, category, example: 'Make something lovely' });
   element('toast');
+  element('share-tool', 'button').dataset.url = 'https://copysprig.com/bold-text/';
   element('saved-list');
   element('recent-list');
   const manual = element('manual-copy', 'dialog');
@@ -207,6 +208,24 @@ function environment({ mode = 'styles', category, favorites = [], hash = '', cop
     },
   };
 }
+
+test('sharing copies only the canonical tool link without storing or tracking a useful copy', async () => {
+  const env = environment({hash:'#private-phrase'});
+  await env.set('text-input', 'Private words 🌸', 'input');
+  await env.get('#share-tool').click();
+  assert.deepEqual(env.copied, ['https://copysprig.com/bold-text/']);
+  assert.deepEqual(env.tracked, []);
+  assert.deepEqual(env.writes, []);
+  assert.match(env.get('#toast').textContent, /Your text is not included/);
+});
+
+test('sharing offers a manual canonical link when the clipboard is blocked', async () => {
+  const env = environment({copyOutcome:'manual'});
+  await env.get('#share-tool').click();
+  assert.equal(env.get('#manual-copy').open,true);
+  assert.equal(env.get('#manual-field').value,'https://copysprig.com/bold-text/');
+  assert.deepEqual(env.tracked, []);
+});
 
 test('saving and copying a mix stores only static selection IDs, never entered or generated text', async () => {
   const env = environment();
