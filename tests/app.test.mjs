@@ -11,7 +11,7 @@ import * as discovery from '../src/discovery.mjs';
 // The real transformation exports are used; copyText is the external boundary.
 const source = (await readFile(new URL('../src/app.mjs', import.meta.url), 'utf8')).replace(/^import .+;\r?\n/gm, '');
 
-function environment({ mode = 'styles', category, styleIds, useCases = [], message = false, favorites = [], hash = '', copyOutcome = 'clipboard', reduceMotion = false } = {}) {
+function environment({ mode = 'styles', category, styleIds, useCases = [], message = false, favorites = [], hash = '', copyOutcome = 'clipboard', copyWait, reduceMotion = false } = {}) {
   const writes = [];
   const copied = [];
   const tracked = [];
@@ -202,7 +202,7 @@ function environment({ mode = 'styles', category, styleIds, useCases = [], messa
       getItem: key => stored.get(key) ?? null,
       setItem: (key, value) => { writes.push({ key, value }); stored.set(key, value); },
     },
-    copyText: async value => { copied.push(value); return copyOutcome; },
+    copyText: async value => { copied.push(value); if(copyWait)await copyWait; return copyOutcome; },
     setTimeout: () => 1, clearTimeout() {},
   });
   return {
@@ -266,6 +266,59 @@ test('Discord message copying wraps nonblank lines, preserves Unicode and sends 
   await env.set('text-input', ' \n\t', 'input');
   assert.equal(button.disabled, true, 'whitespace cannot copy a stale message');
   assert.equal(env.get('#discord-message-preview').textContent, ' \n\t');
+});
+
+test('empty Discord messages cannot copy an example after loading or deleting text', async () => {
+  const env = environment({ message: true });
+  const button = env.get('#copy-discord-message');
+  assert.equal(button.disabled,true);
+  assert.equal(env.get('#discord-message-preview').textContent,'');
+  await button.click();
+  assert.deepEqual(env.copied,[]);
+  await env.set('text-input','My announcement','input');
+  await button.click();
+  await env.set('text-input','','input');
+  assert.equal(button.disabled,true);
+  assert.equal(env.get('#discord-message-preview').textContent,'');
+  assert.equal(button.dataset.copied,undefined);
+  await button.click();
+  assert.deepEqual(env.copied,['**My announcement**']);
+});
+
+test('editing a copied Discord message clears old success feedback while filters preserve it', async () => {
+  const env = environment({ message: true });
+  const button = env.get('#copy-discord-message');
+  await env.set('text-input','Before edit','input');
+  await button.click();
+  await env.set('style-search','bold','input');
+  assert.equal(button.dataset.copied,'true','unchanged message still matches its copy');
+  await env.set('text-input','After edit','input');
+  assert.equal(button.dataset.copied,undefined);
+  assert.equal(env.get('#discord-message-preview').textContent,'**After edit**');
+  assert.deepEqual(env.copied,['**Before edit**']);
+});
+
+test('a delayed clipboard result does not mark an edited Discord message as copied', async () => {
+  let finishCopy;
+  const copyWait = new Promise(resolve=>{finishCopy=resolve;});
+  const env = environment({ message: true, copyWait });
+  await env.set('text-input','Before pending copy','input');
+  const pending = env.get('#copy-discord-message').click();
+  await env.set('text-input','Edited while waiting','input');
+  finishCopy();
+  await pending;
+  assert.equal(env.get('#copy-discord-message').dataset.copied,undefined);
+  assert.deepEqual(env.copied,['**Before pending copy**']);
+});
+
+test('Discord Markdown preserves Unicode line and paragraph separators with per-line markers', async () => {
+  const env = environment({ message: true });
+  const text='  Café 😀\u2028\u2028中文\u2029\tLast line  ';
+  const expected='  **Café 😀**\u2028\u2028**中文**\u2029\t**Last line**  ';
+  await env.set('text-input',text,'input');
+  assert.equal(env.get('#discord-message-preview').textContent,expected);
+  await env.get('#copy-discord-message').click();
+  assert.deepEqual(env.copied,[expected]);
 });
 
 test('Discord offers both bold alphabets alongside script while search and Saved keep their route scope', async () => {

@@ -70,12 +70,24 @@ function favorite(id){
 function renderFavorites(){document.querySelectorAll('[data-save]').forEach(b=>{const yes=favorites.includes(b.dataset.save);b.setAttribute('aria-pressed',String(yes));b.textContent=yes?'★':'☆';b.setAttribute('aria-label',`${yes?'Unsave':'Save'} ${b.dataset.name}`);});}
 function record(id){recent=[id,...recent.filter(x=>x!==id)].slice(0,8);write('copysprig-recent',recent);renderShelf();}
 function copied(button){if(!button)return;clearTimeout(copiedTimers.get(button));button.dataset.copied='true';copiedTimers.set(button,setTimeout(()=>{delete button.dataset.copied;copiedTimers.delete(button);},1800));}
-async function copy(value,id,button){const outcome=await copyText(value);if(outcome==='manual'){const field=manual.querySelector('textarea');field.value=value;manual.showModal();field.focus();field.select();notify('Select the text and use your device’s copy command.');return;}if(id)record(id);notify('Copied. Ready to paste.');copied(button);if(id)event('copy',{item_kind:id.startsWith('symbol:')?'symbol':'style',item_id:id.startsWith('mix:')?'style:mixed':id});}
+async function copy(value,id,button,isCurrent=()=>true){const outcome=await copyText(value);if(outcome==='manual'){const field=manual.querySelector('textarea');field.value=value;manual.showModal();field.focus();field.select();notify('Select the text and use your device’s copy command.');return;}if(id)record(id);notify('Copied. Ready to paste.');if(isCurrent())copied(button);if(id)event('copy',{item_kind:id.startsWith('symbol:')?'symbol':'style',item_id:id.startsWith('mix:')?'style:mixed':id});}
 // Keep original characters and blank lines; Discord interprets the delimiters.
 // Existing Markdown and mentions deliberately remain visible and active.
-function discordMessage(text){return text.split(/(\r\n|\r|\n)/).map((part,index)=>index%2?part:part.replace(/^(\s*)(.*?)(\s*)$/u,(_,before,words,after)=>words?`${before}**${words}**${after}`:part)).join('');}
-function renderMessage(){if(!messagePreview||!input)return;messagePreview.textContent=discordMessage(previewText());messageCopy.disabled=!previewText().trim();}
-messageCopy?.addEventListener('click',()=>copy(discordMessage(previewText()),null,messageCopy));
+function discordMessage(text){return text.split(/(\r\n|[\r\n\u2028\u2029])/).map((part,index)=>index%2?part:part.replace(/^(\s*)(.*?)(\s*)$/u,(_,before,words,after)=>words?`${before}**${words}**${after}`:part)).join('');}
+function renderMessage(){
+ if(!messagePreview||!messageCopy||!input)return;
+ const message=discordMessage(input.value);
+ if(messagePreview.textContent!==message){
+  clearTimeout(copiedTimers.get(messageCopy));copiedTimers.delete(messageCopy);delete messageCopy.dataset.copied;
+  messagePreview.textContent=message;
+ }
+ messageCopy.disabled=!input.value.trim();
+}
+messageCopy?.addEventListener('click',()=>{
+ if(!input.value.trim())return;
+ const message=discordMessage(input.value);
+ return copy(message,null,messageCopy,()=>messagePreview.textContent===message);
+});
 function clearExampleSelection(){exampleButtons.forEach(button=>button.setAttribute('aria-pressed','false'));}
 exampleButtons.forEach(button=>{
   const example=data.useCases?.find(item=>item.id===button.dataset.useCase);
