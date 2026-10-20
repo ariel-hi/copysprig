@@ -1,7 +1,7 @@
-import {STYLES,EFFECTS,FRAMES,transformText,plainText,mixText} from './unicode.mjs?v=9778f5edf997';
-import {symbols,categories} from './catalog.mjs?v=9778f5edf997';
-import {copyText} from './copy.mjs?v=9778f5edf997';
-import {filterStyles,matchesStyleFilters,filterSymbols,pickItem} from './discovery.mjs?v=9778f5edf997';
+import {STYLES,EFFECTS,FRAMES,transformText,plainText,mixText} from './unicode.mjs?v=2d92edf94213';
+import {symbols,categories} from './catalog.mjs?v=2d92edf94213';
+import {copyText} from './copy.mjs?v=2d92edf94213';
+import {filterStyles,matchesStyleFilters,filterSymbols,pickItem} from './discovery.mjs?v=2d92edf94213';
 const data = JSON.parse(document.querySelector('#page-data').textContent);
 const input = document.querySelector('#text-input');
 // Keep the example out of the editable value so the first keystroke replaces it.
@@ -27,6 +27,7 @@ const collectionCount = document.querySelector('#collection-count');
 const styleCount = document.querySelector('#style-count');
 const pickButton = document.querySelector('#pick-style');
 const exampleButtons = document.querySelectorAll('[data-use-case]');
+const messageHelper = document.querySelector('#discord-message-helper');
 const messagePreview = document.querySelector('#discord-message-preview');
 const messageCopy = document.querySelector('#copy-discord-message');
 const frames = FRAMES.filter(frame=>frame.id!=='none').map(({id,left,right})=>[id,left,right]);
@@ -89,6 +90,10 @@ messageCopy?.addEventListener('click',()=>{
  return copy(message,null,messageCopy,()=>messagePreview.textContent===message);
 });
 function clearExampleSelection(){exampleButtons.forEach(button=>button.setAttribute('aria-pressed','false'));}
+function openMessageHelper(){if(messageHelper)messageHelper.open=true;}
+if(location.hash==='#discord-message-helper')openMessageHelper();
+window.addEventListener('hashchange',()=>{if(location.hash==='#discord-message-helper')openMessageHelper();});
+document.querySelectorAll('a[href="#discord-message-helper"]').forEach(link=>link.addEventListener('click',openMessageHelper));
 exampleButtons.forEach(button=>{
   const example=data.useCases?.find(item=>item.id===button.dataset.useCase);
   if(!example||!input)return;
@@ -99,6 +104,12 @@ exampleButtons.forEach(button=>{
     filter='all';pickedItemId=undefined;syncFilters();clearExampleSelection();
     button.setAttribute('aria-pressed','true');renderStyles();
     input.focus({preventScroll:true});input.select();
+    if(example.message&&messageHelper){
+      openMessageHelper();
+      messageHelper.scrollIntoView({block:'start',behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+      messageCopy?.focus({preventScroll:true});
+      notify('Heading example loaded. Copy the message Markdown or edit Your text above.');return;
+    }
     notify(`${example.label} example loaded. Edit it or copy a result.`);
   });
 });

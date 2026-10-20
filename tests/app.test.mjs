@@ -22,6 +22,8 @@ function environment({ mode = 'styles', category, styleIds, useCases = [], messa
   function matches(node, selector) {
     if (selector.startsWith('#')) return node.id === selector.slice(1);
     if (selector.startsWith('.')) return node.className.split(/\s+/).includes(selector.slice(1));
+    const href = selector.match(/^a\[href="([^"]+)"\]$/);
+    if (href) return node.tagName === 'A' && node.getAttribute('href') === href[1];
     const attribute = selector.match(/^\[data-([\w-]+)(?:="([^"]*)")?\]$/);
     if (attribute) {
       const key = attribute[1].replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
@@ -150,8 +152,10 @@ function environment({ mode = 'styles', category, styleIds, useCases = [], messa
       button.textContent = example.label;
     }
     if (message) {
-      element('discord-message-preview', 'code');
-      element('copy-discord-message', 'button').textContent = 'Copy message Markdown';
+      const helper = element('discord-message-helper', 'details');
+      element('discord-message-preview', 'code', helper);
+      element('copy-discord-message', 'button', helper).textContent = 'Copy message Markdown';
+      element('message-link', 'a').setAttribute('href', '#discord-message-helper');
     }
     element('character-count');
     const mixer = element('style-mixer', 'details');
@@ -190,14 +194,16 @@ function environment({ mode = 'styles', category, styleIds, useCases = [], messa
     }
   }
 
+  const windowHandlers = new Map();
+  const location = { hash };
   const window = {
     getSelection: () => selection,
     copysprigTrack: (name, attributes) => tracked.push({ name, attributes }),
-    addEventListener() {},
+    addEventListener(name, handler) { if (!windowHandlers.has(name)) windowHandlers.set(name, []); windowHandlers.get(name).push(handler); },
     matchMedia: () => ({ matches: reduceMotion }),
   };
   runInNewContext(source, {
-    ...unicode, ...discovery, symbols, categories, window, document, location: { hash },
+    ...unicode, ...discovery, symbols, categories, window, document, location,
     localStorage: {
       getItem: key => stored.get(key) ?? null,
       setItem: (key, value) => { writes.push({ key, value }); stored.set(key, value); },
@@ -208,6 +214,7 @@ function environment({ mode = 'styles', category, styleIds, useCases = [], messa
   return {
     document, stored, writes, copied, tracked,
     get: selector => document.querySelector(selector),
+    async navigateHash(hash) { location.hash = hash; for (const handler of windowHandlers.get('hashchange') ?? []) await handler(); },
     async set(id, value, event = 'change') {
       const node = document.querySelector('#' + id);
       node.value = value;
@@ -218,6 +225,47 @@ function environment({ mode = 'styles', category, styleIds, useCases = [], messa
     },
   };
 }
+
+test('Discord helper stays closed by default and opens from its deep link without copying or retaining text', () => {
+  const ordinary = environment({message: true});
+  assert.equal(ordinary.get('#discord-message-helper').open, false);
+  const linked = environment({message: true, hash: '#discord-message-helper'});
+  assert.equal(linked.get('#discord-message-helper').open, true);
+  assert.equal(linked.get('#text-input').value, '');
+  assert.equal(linked.get('#copy-discord-message').disabled, true);
+  assert.deepEqual(linked.copied, []);
+  assert.deepEqual(linked.writes, []);
+  assert.deepEqual(linked.tracked, []);
+});
+
+test('Discord helper links reopen a closed panel and respond to in-page hash navigation', async () => {
+  const env = environment({message: true});
+  const panel = env.get('#discord-message-helper');
+  await env.get('#message-link').click();
+  assert.equal(panel.open, true);
+  panel.open = false;
+  await env.get('#message-link').click();
+  assert.equal(panel.open, true, 'clicking the same anchor again reopens the panel');
+  panel.open = false;
+  await env.navigateHash('#discord-message-helper');
+  assert.equal(panel.open, true);
+  assert.deepEqual(env.copied, []);
+});
+
+test('Discord Heading example reveals exact message Markdown and focuses Copy without copying automatically', async () => {
+  for (const reduceMotion of [false, true]) {
+    const env = environment({message: true, reduceMotion, useCases: [{id:'heading',label:'Heading',text:'Co-op tonight at 8',message:true}]});
+    await env.get('#example-heading').click();
+    assert.equal(env.get('#text-input').value, 'Co-op tonight at 8');
+    assert.equal(env.get('#discord-message-preview').textContent, '**Co-op tonight at 8**');
+    assert.equal(env.get('#discord-message-helper').open, true);
+    assert.equal(env.get('#discord-message-helper').scrollOptions.behavior, reduceMotion ? 'auto' : 'smooth');
+    assert.equal(env.document.activeElement, env.get('#copy-discord-message'));
+    assert.deepEqual(env.copied, []);
+    assert.deepEqual(env.writes, []);
+    assert.deepEqual(env.tracked, []);
+  }
+});
 
 test('use-case examples restore visible route styles without copying, persisting or tracking text', async () => {
   const env = environment({ styleIds: ['bold', 'sans-bold'], useCases: [{ id: 'name', label: 'Name', text: 'Alex Morgan' }] });

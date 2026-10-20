@@ -90,6 +90,9 @@ p { margin-bottom: 16px; }
 .use-case-examples .example-source { color: var(--muted); }
 .use-case-examples .example-output { font: 1.15rem/1.5 'Segoe UI Symbol', 'Cambria Math', sans-serif; overflow-wrap: anywhere; }
 .message-helper .mixer-body>p:first-child { font-size: .85rem; }
+.tool-tasks { display: flex; flex-wrap: wrap; gap: 0 18px; margin-top: 6px; font-size: .8rem; }
+.tool-tasks a { display: inline-flex; align-items: center; min-height: 44px; }
+#discord-message-helper, #discord-display-name-guide, #discord-formatting-guide, #divider-examples { scroll-margin-top: 20px; }
 .markdown-preview { white-space: pre-wrap; overflow-wrap: anywhere; font: .95rem/1.6 var(--mono); color: var(--ink); background: var(--paper); padding: 12px; border: 1px solid var(--control); border-radius: 10px; }
 @media (max-width:760px) { .use-case-examples { grid-template-columns: minmax(0,1fr); } }
 .subtle-button { border: 0; background: transparent; color: var(--green); padding: 8px 10px; font-size: .78rem; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; border-radius: 6px; }
