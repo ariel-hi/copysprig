@@ -1,5 +1,5 @@
 import {STYLES,EFFECTS,FRAMES,transformText,plainText,mixText} from './unicode.mjs';
-import {symbols,categories} from './catalog.mjs';
+import {symbols,categories,wideCategories,blankCategories} from './catalog.mjs';
 import {copyText} from './copy.mjs';
 import {filterStyles,matchesStyleFilters,filterSymbols,pickItem} from './discovery.mjs';
 const data = JSON.parse(document.querySelector('#page-data').textContent);
@@ -178,7 +178,7 @@ function renderStyles(){
   }else{
     const query=(styleSearch?.value||'').trim().toLowerCase();const family=styleFamily?.value||'all';
     const searchFilters={family,query,aliases:styleAliases};
-    const styles=filterStyles(STYLES.filter(s=>!data.styleIds||data.styleIds.includes(s.id)),{filter,favoriteIds:favorites,...searchFilters});
+    const styles=filterStyles(data.styleIds?data.styleIds.map(id=>STYLES.find(s=>s.id===id)).filter(Boolean):STYLES,{filter,favoriteIds:favorites,...searchFilters});
     styles.forEach(s=>appendResult(s,transformText(value,s.id)));
     if(filter==='saved'&&!data.styleIds){for(const id of favorites){const selection=mixSelection(id);if(!selection)continue;const metadata={...mixMetadata(selection),group:STYLES.find(s=>s.id===selection.styleId)?.group||'effects'};if(!matchesStyleFilters(metadata,searchFilters))continue;appendResult(metadata,mixText(value,selection),id);}}
     if(!count){const p=document.createElement('p');p.className='empty';p.textContent=filter==='saved'&&!query&&family==='all'?'Save a style or mix with the star button, then find it here.':'No styles match. Clear the search or choose All families and All styles.';fragment.append(p);}
@@ -197,7 +197,8 @@ function renderSymbols(){
   const fragment=document.createDocumentFragment();
   candidates.forEach(symbol=>{
     const article=document.createElement('article');article.className='symbol-card';
-    if(['divider','face'].includes(symbol.category))article.classList.add('symbol-card-wide');
+    if(wideCategories.includes(symbol.category))article.classList.add('symbol-card-wide');
+    if(blankCategories.includes(symbol.category))article.classList.add('symbol-card-blank');
     const button=document.createElement('button');button.type='button';button.className='symbol-copy';button.setAttribute('aria-label',`Copy ${symbol.name}`);
     const glyph=document.createElement('span');glyph.className='symbol-glyph';glyph.setAttribute('aria-hidden','true');glyph.textContent=symbol.text;
     const name=document.createElement('span');name.className='symbol-name';name.textContent=symbol.name;

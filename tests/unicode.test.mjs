@@ -6,8 +6,8 @@ const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const DIGITS = '0123456789';
 const ORIGINAL_IDS = ['bold', 'italic', 'bold-italic', 'script', 'bold-script', 'fraktur', 'double-struck', 'monospace', 'sans-bold', 'sans-italic', 'fullwidth', 'circled', 'small-caps', 'superscript', 'strikethrough', 'underline'];
 const COMPLETE_IDS = [...ORIGINAL_IDS.slice(0, 12), 'bold-fraktur', 'sans', 'sans-bold-italic'];
-const PLAYFUL_IDS = ['alternating-case', 'spaced', 'reverse', 'upside-down'];
-const EFFECT_IDS = ['strikethrough', 'underline', 'double-underline', 'overline', 'dotted-underline', 'slash', 'glitch-light', 'glitch-heavy'];
+const PLAYFUL_IDS = ['alternating-case', 'spaced', 'reverse', 'upside-down', 'mirror'];
+const EFFECT_IDS = ['strikethrough', 'underline', 'double-underline', 'overline', 'dotted-underline', 'slash', 'glitch-light', 'glitch-heavy', 'zalgo', 'wavy-underline'];
 
 test('each complete alphabet uses assigned Unicode letters and reverses to the same ASCII characters', () => {
   for (const id of COMPLETE_IDS) {
@@ -90,7 +90,7 @@ test('plain conversion changes only curated glyphs, and public metadata is immut
   assert.equal(plainText('ℎℬℭℂ 𝐀 ⁹'), 'hBCC A 9');
   assert.equal(transformText('hello', 'unknown'), 'hello');
   assert.equal(transformText('', 'bold'), '');
-  assert.equal(STYLES.length, 34);
+  assert.equal(STYLES.length, 37);
   assert.deepEqual(STYLES.slice(0, 16).map(({ id }) => id), ORIGINAL_IDS);
   assert.equal(new Set(STYLES.map(({ id }) => id)).size, STYLES.length);
   assert.ok(Object.isFrozen(STYLES));
@@ -222,7 +222,7 @@ test('all frames use static paired strings and preserve existing decorations', (
   }
   for (const { id, left, right } of FRAMES) assert.equal(mixText('hello', { frameId: id }), left + 'hello' + right, id);
   assert.equal(FRAMES.length, 13);
-  assert.equal(EFFECTS.length, 8);
+  assert.equal(EFFECTS.length, 9);
 });
 
 test('plain conversion reports lossy layout behavior without guessing original text', () => {
@@ -255,4 +255,23 @@ test('public metadata is frozen, uniquely keyed and fully grouped', () => {
   }
   assert.equal(plainText(null), '');
   assert.equal(transformText(123, 'unknown'), '123');
+});
+
+test('zalgo is repeatable, bounded, preserves real accents and is removed by plain text recovery', () => {
+  const output = transformText('Hi 9', 'zalgo');
+  assert.equal(output, transformText('Hi 9', 'zalgo'));
+  for (const grapheme of new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(output)) {
+    const marks = Array.from(grapheme.segment).filter((character) => /\p{Mark}/u.test(character)).length;
+    assert.ok(marks <= 11, 'at most eleven marks per grapheme');
+  }
+  assert.equal(plainText(output), 'Hi 9');
+  assert.equal(plainText(transformText('café é', 'zalgo')).normalize('NFC'), 'café é');
+  assert.equal(plainText(transformText('Wave 2', 'wavy-underline')), 'Wave 2');
+  assert.equal(transformText('ab', 'wavy-underline'), 'a̰b̰');
+});
+
+test('mirror reverses each line with Latin mirrored look-alikes and flips paired punctuation', () => {
+  assert.equal(transformText('bed (Sea)?', 'mirror'), '⸮(ɒɘƧ) bɘd');
+  assert.equal(transformText('HOW\nwow', 'mirror'), 'WOH\nwow');
+  assert.ok(!/\p{Script=Greek}|\p{Script=Cyrillic}/u.test(transformText(ALPHABET, 'mirror')));
 });

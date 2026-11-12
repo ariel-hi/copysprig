@@ -146,4 +146,160 @@ KAOMOJI
 =^･ω･^=  —  Cat face
 (ง •̀_•́)ง  —  Ready to go
 
+CHECK MARKS
+✓  —  Check mark
+✔  —  Heavy check mark
+☑  —  Ballot box with check
+✅  —  Check mark button emoji
+☐  —  Empty ballot box
+☒  —  Ballot box with X
+✗  —  Ballot X
+✘  —  Heavy ballot X
+✕  —  Multiplication X
+✖  —  Heavy multiplication X
+❌  —  Cross mark emoji
+❎  —  Cross mark button emoji
+
+BULLET POINTS
+•  —  Bullet
+◦  —  White bullet
+‣  —  Triangular bullet
+⁃  —  Hyphen bullet
+∙  —  Bullet operator
+●  —  Black circle
+○  —  White circle
+◆  —  Black diamond
+◇  —  White diamond
+▪  —  Black small square
+▫  —  White small square
+►  —  Black right pointer
+▸  —  Small right triangle
+➤  —  Black arrowhead
+❖  —  Diamond with X
+⦿  —  Circled bullet
+
+CROWNS & CHESS
+👑  —  Crown emoji
+♔  —  White chess king
+♕  —  White chess queen
+♚  —  Black chess king
+♛  —  Black chess queen
+♖  —  White chess rook
+♜  —  Black chess rook
+♗  —  White chess bishop
+♝  —  Black chess bishop
+♘  —  White chess knight
+♞  —  Black chess knight
+♙  —  White chess pawn
+♟  —  Black chess pawn
+⚜  —  Fleur-de-lis
+
+CURRENCY
+$  —  Dollar sign
+€  —  Euro sign
+£  —  Pound sign
+¥  —  Yen sign
+₹  —  Indian rupee sign
+₩  —  Won sign
+₽  —  Ruble sign
+₺  —  Turkish lira sign
+₪  —  New sheqel sign
+₦  —  Naira sign
+₱  —  Peso sign
+₫  —  Dong sign
+₴  —  Hryvnia sign
+฿  —  Baht sign
+₿  —  Bitcoin sign
+¢  —  Cent sign
+¤  —  Currency sign
+
+MATH
+±  —  Plus-minus sign
+×  —  Multiplication sign
+÷  —  Division sign
+≠  —  Not equal to
+≈  —  Almost equal to
+≤  —  Less-than or equal to
+≥  —  Greater-than or equal to
+∞  —  Infinity
+√  —  Square root
+°  —  Degree sign
+π  —  Pi
+∑  —  Summation
+∫  —  Integral
+∆  —  Increment
+∂  —  Partial differential
+∈  —  Element of
+∅  —  Empty set
+∩  —  Intersection
+∪  —  Union
+∴  —  Therefore
+∵  —  Because
+∝  —  Proportional to
+½  —  One half
+¼  —  One quarter
+¾  —  Three quarters
+²  —  Superscript two
+³  —  Superscript three
+‰  —  Per mille
+
+COPYRIGHT & MARKS
+©  —  Copyright sign
+®  —  Registered sign
+™  —  Trade mark sign
+℠  —  Service mark
+℗  —  Sound recording copyright
+§  —  Section sign
+¶  —  Pilcrow sign
+†  —  Dagger
+‡  —  Double dagger
+№  —  Numero sign
+℃  —  Degree Celsius
+℉  —  Degree Fahrenheit
+
+ZODIAC
+♈  —  Aries
+♉  —  Taurus
+♊  —  Gemini
+♋  —  Cancer
+♌  —  Leo
+♍  —  Virgo
+♎  —  Libra
+♏  —  Scorpio
+♐  —  Sagittarius
+♑  —  Capricorn
+♒  —  Aquarius
+♓  —  Pisces
+⛎  —  Ophiuchus
+
+LENNY FACES
+( ͡° ͜ʖ ͡°)  —  Lenny face
+( ͡~ ͜ʖ ͡°)  —  Winking Lenny
+( ͠° ͟ʖ ͡°)  —  Suspicious Lenny
+( ͡ᵔ ͜ʖ ͡ᵔ)  —  Happy Lenny
+( ͡° ʖ̯ ͡°)  —  Sad Lenny
+( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)  —  Lenny crowd
+¯\_(ツ)_/¯  —  Shrug
+ಠ_ಠ  —  Look of disapproval
+(•_•) ( •_•)>⌐■-■ (⌐■_■)  —  Deal with it
+(☞ﾟヮﾟ)☞  —  Finger guns
+(ノಠ益ಠ)ノ彡┻━┻  —  Angry table flip
+༼ つ ◕_◕ ༽つ  —  Give it to me
+(っ◔◡◔)っ ♥  —  Hug with heart
+ᕙ(⇀‸↼‶)ᕗ  —  Flexing
+(ಥ﹏ಥ)  —  Crying
+(⌐■_■)  —  Cool sunglasses
+
+INVISIBLE CHARACTERS
+ㅤ  —  Hangul filler (U+3164)
+⠀  —  Braille blank (U+2800)
+​  —  Zero width space (U+200B)
+   —  No-break space (U+00A0)
+   —  Em space (U+2003)
+   —  En space (U+2002)
+   —  Thin space (U+2009)
+　  —  Ideographic space (U+3000)
+ﾠ  —  Halfwidth Hangul filler (U+FFA0)
+ᅟ  —  Hangul choseong filler (U+115F)
+
 No font file is installed. This is a UTF-8 character reference.

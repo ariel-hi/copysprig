@@ -1,7 +1,7 @@
-import {STYLES,EFFECTS,FRAMES,transformText,plainText,mixText} from './unicode.mjs?v=2d92edf94213';
-import {symbols,categories} from './catalog.mjs?v=2d92edf94213';
-import {copyText} from './copy.mjs?v=2d92edf94213';
-import {filterStyles,matchesStyleFilters,filterSymbols,pickItem} from './discovery.mjs?v=2d92edf94213';
+import {STYLES,EFFECTS,FRAMES,transformText,plainText,mixText} from './unicode.mjs?v=cc4f9b210cff';
+import {symbols,categories,wideCategories,blankCategories} from './catalog.mjs?v=cc4f9b210cff';
+import {copyText} from './copy.mjs?v=cc4f9b210cff';
+import {filterStyles,matchesStyleFilters,filterSymbols,pickItem} from './discovery.mjs?v=cc4f9b210cff';
 const data = JSON.parse(document.querySelector('#page-data').textContent);
 const input = document.querySelector('#text-input');
 // Keep the example out of the editable value so the first keystroke replaces it.
@@ -178,7 +178,7 @@ function renderStyles(){
   }else{
     const query=(styleSearch?.value||'').trim().toLowerCase();const family=styleFamily?.value||'all';
     const searchFilters={family,query,aliases:styleAliases};
-    const styles=filterStyles(STYLES.filter(s=>!data.styleIds||data.styleIds.includes(s.id)),{filter,favoriteIds:favorites,...searchFilters});
+    const styles=filterStyles(data.styleIds?data.styleIds.map(id=>STYLES.find(s=>s.id===id)).filter(Boolean):STYLES,{filter,favoriteIds:favorites,...searchFilters});
     styles.forEach(s=>appendResult(s,transformText(value,s.id)));
     if(filter==='saved'&&!data.styleIds){for(const id of favorites){const selection=mixSelection(id);if(!selection)continue;const metadata={...mixMetadata(selection),group:STYLES.find(s=>s.id===selection.styleId)?.group||'effects'};if(!matchesStyleFilters(metadata,searchFilters))continue;appendResult(metadata,mixText(value,selection),id);}}
     if(!count){const p=document.createElement('p');p.className='empty';p.textContent=filter==='saved'&&!query&&family==='all'?'Save a style or mix with the star button, then find it here.':'No styles match. Clear the search or choose All families and All styles.';fragment.append(p);}
@@ -197,7 +197,8 @@ function renderSymbols(){
   const fragment=document.createDocumentFragment();
   candidates.forEach(symbol=>{
     const article=document.createElement('article');article.className='symbol-card';
-    if(['divider','face'].includes(symbol.category))article.classList.add('symbol-card-wide');
+    if(wideCategories.includes(symbol.category))article.classList.add('symbol-card-wide');
+    if(blankCategories.includes(symbol.category))article.classList.add('symbol-card-blank');
     const button=document.createElement('button');button.type='button';button.className='symbol-copy';button.setAttribute('aria-label',`Copy ${symbol.name}`);
     const glyph=document.createElement('span');glyph.className='symbol-glyph';glyph.setAttribute('aria-hidden','true');glyph.textContent=symbol.text;
     const name=document.createElement('span');name.className='symbol-name';name.textContent=symbol.name;

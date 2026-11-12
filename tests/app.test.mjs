@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { setImmediate as settleCopy } from 'node:timers/promises';
 import { runInNewContext } from 'node:vm';
 import * as unicode from '../src/unicode.mjs';
-import { symbols, categories } from '../src/catalog.mjs';
+import { symbols, categories, wideCategories, blankCategories } from '../src/catalog.mjs';
 import * as discovery from '../src/discovery.mjs';
 
 // Exercise the app's event wiring without a browser, network, or clipboard.
@@ -203,7 +203,7 @@ function environment({ mode = 'styles', category, styleIds, useCases = [], messa
     matchMedia: () => ({ matches: reduceMotion }),
   };
   runInNewContext(source, {
-    ...unicode, ...discovery, symbols, categories, window, document, location,
+    ...unicode, ...discovery, symbols, categories, wideCategories, blankCategories, window, document, location,
     localStorage: {
       getItem: key => stored.get(key) ?? null,
       setItem: (key, value) => { writes.push({ key, value }); stored.set(key, value); },
@@ -372,9 +372,9 @@ test('Discord Markdown preserves Unicode line and paragraph separators with per-
 test('Discord offers both bold alphabets alongside script while search and Saved keep their route scope', async () => {
   const env = environment({ styleIds: ['bold', 'sans-bold', 'bold-script'], favorites: ['style:bold-script', 'style:sans-bold', 'style:circled'] });
   const ids = () => env.get('#results').querySelectorAll('.result').map(card => card.dataset.itemId);
-  assert.deepEqual(ids(), ['style:bold', 'style:bold-script', 'style:sans-bold']);
+  assert.deepEqual(ids(), ['style:bold', 'style:sans-bold', 'style:bold-script']);
   await env.get('#filter-saved').click();
-  assert.deepEqual(ids(), ['style:bold-script', 'style:sans-bold']);
+  assert.deepEqual(ids(), ['style:sans-bold', 'style:bold-script']);
   await env.set('style-search', 'sans', 'input');
   assert.deepEqual(ids(), ['style:sans-bold']);
   await env.set('text-input', 'Nova 8', 'input');
@@ -571,7 +571,7 @@ test('style and mixer live counts are not rewritten when editing preserves their
 
 test('symbol search, saved filtering and category chips reset together without recording search words', async () => {
   const env = environment({ mode: 'symbols', favorites: ['symbol:star-0'] });
-  assert.equal(env.get('#symbol-grid').querySelectorAll('.symbol-card-wide').length, symbols.filter(item => ['divider', 'face'].includes(item.category)).length);
+  assert.equal(env.get('#symbol-grid').querySelectorAll('.symbol-card-wide').length, symbols.filter(item => wideCategories.includes(item.category)).length);
   await env.set('symbol-search', 'stars', 'input');
   assert.equal(env.get('#symbol-grid').children.length, categories.find(item => item.id === 'star').items.length);
   await env.get('#filter-saved').click();

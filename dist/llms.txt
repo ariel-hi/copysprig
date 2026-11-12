@@ -1,0 +1,67 @@
+# CopySprig
+
+> Free fancy text generator and copy-and-paste symbol library. Type once to get 37 Unicode text styles (bold, italic, cursive, gothic, bubble, tiny, glitch, Zalgo, mirror and more), app-specific font pages, and 263 named symbols, kaomoji and invisible characters. Text is transformed in the browser; nothing is uploaded and no signup is needed.
+
+## Text generators
+
+- [Fancy text generator](https://copysprig.com/): Free fancy text generator: type once, then copy and paste 37 font styles like bold, cursive, bubble, gothic and Zalgo for Instagram, TikTok and Discord.
+- [Bold text generator](https://copysprig.com/bold-text/): Free bold text generator. Turn words into bold serif or sans Unicode letters and digits, then copy and paste them into bios, captions and posts.
+- [Italic text generator](https://copysprig.com/italic-text/): Free italic text generator. Compare italic and bold italic Unicode letters, then copy and paste slanted text anywhere formatting is missing.
+- [Cursive text generator](https://copysprig.com/cursive-text/): Free cursive text generator. Turn a name or heading into flowing script letters, including bold cursive, and copy and paste it in one tap.
+- [Gothic text generator](https://copysprig.com/gothic-text/): Free gothic text generator. Make Old English and blackletter-style words in regular or bold Fraktur Unicode, ready to copy and paste.
+- [Double-struck text generator](https://copysprig.com/double-struck-text/): Free double-struck text generator. Copy outline-style letters and digits for usernames, headings and short profile labels in one tap.
+- [Bubble text generator](https://copysprig.com/bubble-text/): Free bubble text generator. Wrap letters in outlined or filled circles for a playful username, bio line or caption, then copy and paste.
+- [Square text generator](https://copysprig.com/square-text/): Free square text generator. Turn letters into outlined or filled square blocks for a compact, badge-like label you can copy and paste.
+- [Tiny text generator](https://copysprig.com/tiny-text/): Free tiny text generator. Make small caps, superscript and subscript letters for subtle bio notes and captions, then copy and paste them.
+- [Upside-down text generator](https://copysprig.com/upside-down-text/): Free upside-down text generator. Flip a short phrase so it reads upside down, then copy and paste it into chats, bios and comments.
+- [Glitch text generator](https://copysprig.com/glitch-text/): Free glitch text generator. Add light or heavy Zalgo combining marks for creepy, corrupted text, then copy and paste it into games and chats.
+- [Underline text generator](https://copysprig.com/underline-text/): Free underline text generator. Add single, double or dotted underlines to letters with Unicode combining marks, then copy and paste anywhere.
+- [Small caps generator](https://copysprig.com/small-caps/): Free small caps generator. Turn ordinary letters into compact small capitals for names, headings and captions, then copy and paste the result.
+- [Fullwidth text generator](https://copysprig.com/fullwidth-text/): Free fullwidth text generator. Make wide vaporwave aesthetic letters and digits for bios and captions, then copy and paste them anywhere.
+- [Monospace text generator](https://copysprig.com/monospace-text/): Free monospace text generator. Copy typewriter-style Unicode letters and digits for labels and bios where code formatting is unavailable.
+- [Strikethrough text generator](https://copysprig.com/strikethrough-text/): Free strikethrough text generator. Cross out words with a combining strike line and copy and paste crossed-out text into posts and chats.
+- [Zalgo text generator](https://copysprig.com/zalgo-text/): Free Zalgo text generator. Turn words into creepy, cursed text with stacked combining marks above and below, then copy and paste it anywhere.
+- [Mirror text generator](https://copysprig.com/mirror-text/): Free mirror text generator. Flip words into mirror writing or backwards text, compare upside-down text, and copy and paste the result in one tap.
+- [Aesthetic fonts generator](https://copysprig.com/aesthetic-fonts/): Aesthetic fonts to copy and paste: cursive, small caps, vaporwave wide text and soft styles for Instagram, TikTok and Discord bios and usernames.
+- [Cool fonts generator](https://copysprig.com/cool-fonts/): Cool fonts to copy and paste: gothic, outline, boxed, bubble, glitch and Zalgo text styles for gamertags, display names, bios and posts. Free.
+- [Fancy text style mixer](https://copysprig.com/style-mixer/): Mix your own fancy text: combine a Unicode font style, a text effect and a symbol frame, preview it live, then copy and paste the result.
+- [Text decorator generator](https://copysprig.com/text-decorator/): Free text decorator. Frame a word or name with matching stars, hearts, brackets and sparkles, then copy and paste the decorated text.
+- [Fancy text to normal text converter](https://copysprig.com/plain-text/): Convert fancy text back to normal text. Paste bold, cursive, bubble or other Unicode letters and recover ordinary, searchable Latin characters.
+- [Instagram fonts generator](https://copysprig.com/instagram-fonts/): Instagram fonts for your bio, name and captions. Copy and paste cursive, bold, bubble and aesthetic text styles that work in the Instagram app.
+- [TikTok fonts generator](https://copysprig.com/tiktok-fonts/): TikTok fonts for your bio, name and captions. Copy and paste bold, cursive and aesthetic Unicode text styles to make your profile stand out.
+- [Discord fonts generator](https://copysprig.com/discord-fonts/): Copy Unicode styles for a Discord display name or profile accent. Try name, bio and heading examples, or copy native bold Markdown for a chat message.
+- [X (Twitter) fonts generator](https://copysprig.com/twitter-fonts/): X (Twitter) fonts for posts, display names and bios. Copy and paste bold and italic Unicode text where X offers no formatting buttons.
+- [Facebook fonts generator](https://copysprig.com/facebook-fonts/): Facebook fonts for posts, comments and bios. Copy and paste bold, italic and fancy Unicode text styles to add emphasis on Facebook.
+- [WhatsApp fonts generator](https://copysprig.com/whatsapp-fonts/): WhatsApp fonts for messages, status and About: copy and paste cursive, bubble and bold text, plus a quick guide to WhatsApp’s own formatting codes.
+- [YouTube fonts generator](https://copysprig.com/youtube-fonts/): YouTube fonts for comments, descriptions and your channel About. Copy and paste bold, cursive and boxed Unicode text, with tips that keep search working.
+- [LinkedIn bold text and fonts](https://copysprig.com/linkedin-fonts/): LinkedIn bold and italic text generator. Copy and paste Unicode fonts into posts, your headline and About, where LinkedIn has no formatting button.
+
+## Symbols to copy and paste
+
+- [Symbols to copy and paste](https://copysprig.com/symbols/): Cool symbols to copy and paste: hearts, stars, arrows, flowers, moons, brackets, music notes and kaomoji. Search by name and copy in one tap.
+- [Heart symbols to copy and paste](https://copysprig.com/heart-symbols/): Heart symbols to copy and paste: outline ♡, filled ♥ and decorative ❤ hearts for bios, sign-offs and captions. Tap any heart to copy it.
+- [Star symbols to copy and paste](https://copysprig.com/star-symbols/): Star and sparkle symbols to copy and paste: outline ☆, bold ★ and sparkle ✦ marks for highlights, bios and captions. Tap a star to copy.
+- [Arrow symbols to copy and paste](https://copysprig.com/arrow-symbols/): Arrow symbols to copy and paste: right →, heavy ➜, down ↓ and decorative arrows for link labels, bios and short directions. Tap to copy.
+- [Flower symbols to copy and paste](https://copysprig.com/flower-symbols/): Flower symbols to copy and paste: ✿ ❀ ❁ and other floral marks for gentle dividers, signatures and nature-themed bios. Tap one to copy.
+- [Moon & sky symbols to copy and paste](https://copysprig.com/moon-symbols/): Moon and sky symbols to copy and paste: crescents ☾, sun marks ☀, tiny stars ⋆ and moon phases for night-sky bios. Tap any to copy.
+- [Bracket symbols to copy and paste](https://copysprig.com/bracket-symbols/): Decorative bracket symbols to copy and paste: 【】, 「」, 『』 and more matching pairs for framing names, titles and profile labels.
+- [Music note symbols to copy and paste](https://copysprig.com/music-symbols/): Music note symbols to copy and paste: ♪ ♫ ♬ and other musical marks for playlist titles, artist bios and music captions. Tap to copy.
+- [Text dividers to copy and paste](https://copysprig.com/dividers/): Aesthetic text dividers to copy and paste: short ─ ✦ ─ lines and ornaments that separate bio sections and captions without an image.
+- [Kaomoji text faces to copy and paste](https://copysprig.com/kaomoji/): Kaomoji to copy and paste: Japanese text faces like (◕‿◕) grouped by mood, from happy and grateful to calm and surprised. Tap to copy.
+- [Check mark symbols to copy and paste](https://copysprig.com/check-mark-symbols/): Check mark symbols to copy and paste: ✓ ✔ ☑ ✅ ticks, ✗ ✘ ❌ crosses and ☐ ballot boxes for to-do lists, polls and status updates. Tap to copy.
+- [Bullet point symbols to copy and paste](https://copysprig.com/bullet-point-symbols/): Bullet point symbols to copy and paste: • ◦ ‣ ▪ ► and more for lists in Instagram bios, LinkedIn posts, captions and résumés. Tap any bullet to copy.
+- [Crown symbols to copy and paste](https://copysprig.com/crown-symbols/): Crown symbols to copy and paste: 👑 crown emoji, ♔ ♕ ♚ ♛ chess kings and queens and ⚜ fleur-de-lis for gaming names and royal bios. Tap to copy.
+- [Currency symbols to copy and paste](https://copysprig.com/currency-symbols/): Currency symbols to copy and paste: dollar $, euro €, pound £, yen ¥, rupee ₹, won ₩, bitcoin ₿ and more for prices and shop captions. Tap to copy.
+- [Math symbols to copy and paste](https://copysprig.com/math-symbols/): Math symbols to copy and paste: ± × ÷ ≠ ≈ ≤ ≥ ∞ √ ° π ∑ ∫ and fractions for homework, notes and posts. Search by name and tap any symbol to copy.
+- [Copyright symbol © and trademark signs](https://copysprig.com/copyright-symbol/): Copyright symbol © to copy and paste, plus registered ®, trademark ™, service mark ℠, section § and pilcrow ¶ signs, with keyboard shortcuts.
+- [Zodiac symbols to copy and paste](https://copysprig.com/zodiac-symbols/): Zodiac symbols to copy and paste: Aries ♈, Taurus ♉, Gemini ♊ through Pisces ♓, with dates, for astrology bios and birthday captions. Tap to copy.
+- [Lenny face ( ͡° ͜ʖ ͡°) to copy and paste](https://copysprig.com/lenny-face/): Lenny face ( ͡° ͜ʖ ͡°) to copy and paste, plus the shrug ¯\_(ツ)_/¯, look of disapproval ಠ_ಠ, finger guns and other classic meme text faces.
+- [Invisible character: copy blank text](https://copysprig.com/invisible-character/): Copy an invisible character or blank text in one tap: Hangul filler, braille blank and zero width space for empty names, messages and bio line breaks.
+
+## Guides and site information
+
+- [About CopySprig](https://copysprig.com/about/): About CopySprig: a free, independent fancy text and symbol kit. No accounts, no uploads, and honest notes on how Unicode characters behave.
+- [Privacy](https://copysprig.com/privacy/): CopySprig privacy: the text you type stays in your browser, saved items stay on your device, and optional analytics never sees your words.
+- [Terms of use](https://copysprig.com/terms/): CopySprig terms of use: simple conditions and limitations for using the free fancy text generator, Unicode styles and copy-and-paste symbols.
+- [Contact CopySprig](https://copysprig.com/contact/): Contact CopySprig to report a bug, suggest a new text style or symbol, or ask a privacy question about the free fancy text generator.
+- [A practical Unicode paste guide](https://copysprig.com/unicode-guide/): Before you paste fancy text: how Unicode letters work, why some show as boxes, screen reader effects, and plain-text fallbacks that always work.

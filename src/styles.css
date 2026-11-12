@@ -448,3 +448,6 @@ p { margin-bottom: 16px; }
 .app-shortcuts a { display: inline-flex; align-items: center; min-height: 44px; }
 .share-tool { min-height: 44px; flex-shrink: 0; font-size: .8rem; padding: 4px 7px; }
 .search-wrap .label-row label { margin-bottom: 0; }
+.symbol-card-blank .symbol-glyph { display: inline-block; min-width: 2.4em; min-height: 1.3em; border: 2px dashed currentColor; border-radius: 10px; opacity: .45; }
+.footer-popular { max-width: 440px; gap: 4px 18px; }
+kbd { font-family: ui-monospace, Consolas, monospace; font-size: .85em; padding: 1px 6px; border: 1.5px solid var(--ink, #27133f); border-bottom-width: 3px; border-radius: 6px; background: #fff; white-space: nowrap; }

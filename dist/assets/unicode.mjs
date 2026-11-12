@@ -19,12 +19,20 @@ const marks = Object.freeze({
   overline: '\u0305',
   'dotted-underline': '\u0324',
   slash: '\u0338',
+  'wavy-underline': '\u0330',
 });
 // Avoid ordinary acute, grave, diaeresis, cedilla and dot-below accents in the
 // glitch palette. Light adds two marks; heavy adds six, never unbounded Zalgo.
 const GLITCH_ABOVE = ['\u035B', '\u0352', '\u0350'];
 const GLITCH_BELOW = ['\u034E', '\u0353', '\u0355'];
-const ownMarks = new Set([...Object.values(marks), ...GLITCH_ABOVE, ...GLITCH_BELOW]);
+// Zalgo uses a wider fixed palette that still excludes common Latin accents
+// (grave, acute, circumflex, tilde, macron, breve, dot, diaeresis, ring, caron,
+// cedilla, ogonek and dot below), so plain text recovery keeps real accents.
+const codePoints = (list) => list.map((hex) => String.fromCodePoint(hex));
+const ZALGO_ABOVE = codePoints([0x30D, 0x30E, 0x310, 0x311, 0x312, 0x313, 0x314, 0x33D, 0x33E, 0x33F, 0x342, 0x343, 0x344, 0x34A, 0x34B, 0x34C, 0x346, 0x350, 0x351, 0x352, 0x357, 0x35B]);
+const ZALGO_BELOW = codePoints([0x316, 0x317, 0x318, 0x319, 0x31C, 0x31D, 0x31E, 0x31F, 0x320, 0x329, 0x32A, 0x32B, 0x32C, 0x32D, 0x32E, 0x32F, 0x339, 0x33A, 0x33B, 0x33C, 0x347, 0x348, 0x349, 0x34D, 0x34E, 0x353, 0x354, 0x355, 0x356, 0x359, 0x35A]);
+const ZALGO_MIDDLE = codePoints([0x334, 0x335, 0x337]);
+const ownMarks = new Set([...Object.values(marks), ...GLITCH_ABOVE, ...GLITCH_BELOW, ...ZALGO_ABOVE, ...ZALGO_BELOW, ...ZALGO_MIDDLE]);
 
 function rangeMap(upperStart, lowerStart, digitStart, exceptions = {}) {
   const map = new Map();
@@ -143,6 +151,28 @@ const upsideDown = new Map(Object.entries({
   m: 'ɯ', n: 'u', o: 'o', p: 'd', q: 'b', r: 'ɹ', s: 's', t: 'ʇ', u: 'n', v: 'ʌ', w: 'ʍ', x: 'x', y: 'ʎ', z: 'z',
 }));
 
+// Fixed, repeatable Zalgo: five marks above, five below and one through each
+// supported letter or digit. Position varies the picks so text looks chaotic.
+function zalgoTransform(text) {
+  return perLine(text, (line) => graphemes(line).map((grapheme, position) => {
+    const [base, ...existingMarks] = Array.from(grapheme);
+    const plain = reverseMap.get(base) ?? base;
+    if (!ASCII_ALNUM.test(plain) || !existingMarks.every((mark) => ownMarks.has(mark))) return grapheme;
+    const seed = plain.codePointAt(0) * 7 + position * 13;
+    const pick = (pool, count, offset) => Array.from({ length: count }, (_, k) => pool[(seed + offset + k * 5) % pool.length]);
+    const selected = [...new Set([...pick(ZALGO_ABOVE, 5, 0), ...pick(ZALGO_MIDDLE, 1, 3), ...pick(ZALGO_BELOW, 5, 11)])];
+    return grapheme + selected.filter((mark) => !existingMarks.includes(mark)).join('');
+  }).join(''));
+}
+
+// Approximate mirrored Latin letters and paired punctuation. Symmetric letters
+// stay as they are; no Greek, Cyrillic or Hebrew stand-ins.
+const mirrored = new Map(Object.entries({
+  a: 'ɒ', b: 'd', c: 'ɔ', d: 'b', e: 'ɘ', p: 'q', q: 'p', r: 'ɿ',
+  C: 'Ɔ', E: 'Ǝ', L: '⅃', S: 'Ƨ',
+  '?': '⸮', '(': ')', ')': '(', '[': ']', ']': '[', '{': '}', '}': '{', '<': '>', '>': '<', '/': '\\', '\\': '/',
+}));
+
 const playfulTransforms = {
   'alternating-case': (text) => perLine(text, (line) => {
     let letters = 0;
@@ -155,6 +185,8 @@ const playfulTransforms = {
   }),
   reverse: (text) => perLine(text, (line) => graphemes(line).reverse().join('')),
   'upside-down': (text) => perLine(text, (line) => graphemes(line).reverse().map((part) => upsideDown.get(part) ?? part).join('')),
+  mirror: (text) => perLine(text, (line) => graphemes(line).reverse().map((part) => mirrored.get(part) ?? part).join('')),
+  zalgo: zalgoTransform,
 };
 
 function freezeEntries(entries) {
@@ -205,6 +237,9 @@ export const STYLES = freezeEntries([
   { id: 'spaced', label: 'Spaced', group: 'playful', description: 'Adds spaces between neighboring graphemes; existing whitespace stays intact. Added spaces cannot be identified for removal.' },
   { id: 'reverse', label: 'Reverse', group: 'playful', description: 'Reverses whole graphemes within each line. Apply Reverse again to restore the order.' },
   { id: 'upside-down', label: 'Upside down', group: 'playful', description: 'Reverses each line with approximate turned lowercase Latin letters; uppercase, digits and l stay plain. Plain text cannot restore this layout.' },
+  { id: 'zalgo', label: 'Zalgo', group: 'effects', description: 'Eleven fixed combining marks above, through and below each supported letter or digit. Plain text recovery removes them.' },
+  { id: 'mirror', label: 'Mirror', group: 'playful', description: 'Reverses each line and swaps selected letters and brackets for mirrored look-alikes; symmetric letters stay plain.' },
+  { id: 'wavy-underline', label: 'Wavy underline', group: 'effects', description: 'A combining wavy line below plain or supported styled letters and digits.' },
 ].map((style) => ({
   ...style,
   transform: playfulTransforms[style.id] ?? (ownEffect(style.id) ? combiningTransform(style.id) : mapTransform(style.id)),
@@ -230,6 +265,7 @@ export const EFFECTS = freezeEntries([
   { id: 'dotted-underline', label: 'Dotted underline' },
   { id: 'slash', label: 'Slash' },
   { id: 'glitch-light', label: 'Light glitch' },
+  { id: 'wavy-underline', label: 'Wavy underline' },
 ]);
 
 export const FRAMES = freezeEntries([

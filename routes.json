@@ -80,6 +80,26 @@
     "kind": "utility"
   },
   {
+    "path": "/zalgo-text/",
+    "title": "Zalgo text generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/mirror-text/",
+    "title": "Mirror text generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/aesthetic-fonts/",
+    "title": "Aesthetic fonts generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/cool-fonts/",
+    "title": "Cool fonts generator",
+    "kind": "utility"
+  },
+  {
     "path": "/style-mixer/",
     "title": "Fancy text style mixer",
     "kind": "utility"
@@ -117,6 +137,21 @@
   {
     "path": "/facebook-fonts/",
     "title": "Facebook fonts generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/whatsapp-fonts/",
+    "title": "WhatsApp fonts generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/youtube-fonts/",
+    "title": "YouTube fonts generator",
+    "kind": "utility"
+  },
+  {
+    "path": "/linkedin-fonts/",
+    "title": "LinkedIn bold text and fonts",
     "kind": "utility"
   },
   {
@@ -167,6 +202,51 @@
   {
     "path": "/kaomoji/",
     "title": "Kaomoji text faces to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/check-mark-symbols/",
+    "title": "Check mark symbols to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/bullet-point-symbols/",
+    "title": "Bullet point symbols to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/crown-symbols/",
+    "title": "Crown symbols to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/currency-symbols/",
+    "title": "Currency symbols to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/math-symbols/",
+    "title": "Math symbols to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/copyright-symbol/",
+    "title": "Copyright symbol © and trademark signs",
+    "kind": "utility"
+  },
+  {
+    "path": "/zodiac-symbols/",
+    "title": "Zodiac symbols to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/lenny-face/",
+    "title": "Lenny face ( ͡° ͜ʖ ͡°) to copy and paste",
+    "kind": "utility"
+  },
+  {
+    "path": "/invisible-character/",
+    "title": "Invisible character: copy blank text",
     "kind": "utility"
   },
   {
