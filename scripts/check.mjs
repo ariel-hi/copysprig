@@ -46,7 +46,8 @@ for (const route of routes) {
   ensure(description?.length >= 20 && description.length <= 250, `Missing/unreasonable description: ${route.path}`);
   ensure(!descriptions.has(description), `Duplicate description: ${route.path}`); descriptions.add(description);
   ensure((html.match(/<h1\b/gi) ?? []).length === 1, `Expected one h1: ${route.path}`);
-  ensure(/<html\b[^>]*lang="en"/.test(html), `Missing document language: ${route.path}`);
+  ensure(new RegExp(`<html\\b[^>]*lang="${route.lang || 'en'}"`).test(html), `Missing document language: ${route.path}`);
+  if (route.lang) ensure(/hreflang="/.test(html) || !/\/(es|pt)\//.test(route.path), `Localized page lacks hreflang alternates: ${route.path}`);
   ensure(/<main\b[^>]*id="main"/.test(html), `Missing main/skip-link target: ${route.path}`);
   ensure(meta(html, 'viewport')?.includes('width=device-width'), `Missing responsive viewport: ${route.path}`);
   ensure(!/noindex/i.test(meta(html, 'robots') ?? ''), `Indexable page has noindex: ${route.path}`);

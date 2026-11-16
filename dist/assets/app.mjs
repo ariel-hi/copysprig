@@ -1,8 +1,15 @@
-import {STYLES,EFFECTS,FRAMES,transformText,plainText,mixText} from './unicode.mjs?v=cc4f9b210cff';
-import {symbols,categories,wideCategories,blankCategories} from './catalog.mjs?v=cc4f9b210cff';
-import {copyText} from './copy.mjs?v=cc4f9b210cff';
-import {filterStyles,matchesStyleFilters,filterSymbols,pickItem} from './discovery.mjs?v=cc4f9b210cff';
+import {STYLES,EFFECTS,FRAMES,transformText,plainText,mixText} from './unicode.mjs?v=b210eabbf322';
+import {symbols,categories,wideCategories,blankCategories} from './catalog.mjs?v=b210eabbf322';
+import {copyText} from './copy.mjs?v=b210eabbf322';
+import {i18n} from './i18n.mjs?v=b210eabbf322';
+import {filterStyles,matchesStyleFilters,filterSymbols,pickItem} from './discovery.mjs?v=b210eabbf322';
 const data = JSON.parse(document.querySelector('#page-data').textContent);
+// Localized pages set data.lang; English strings below are the fallback.
+const locale = data.lang && i18n[data.lang] ? i18n[data.lang] : null;
+function tx(key, english, ...args){const value=locale?.ui?.[key];return value===undefined?english:typeof value==='function'?value(...args):value;}
+const styleList = locale ? STYLES.map(style=>{const local=locale.styles?.[style.id];return local?{...style,label:local[0],description:local[1],english:style.label}:style;}) : STYLES;
+const symbolList = (locale ? symbols.map(symbol=>{const name=locale.symbols?.[symbol.id];return name?{...symbol,name,tags:`${symbol.tags} ${symbol.name}`}:symbol;}) : symbols).filter(symbol=>!data.categories||data.categories.includes(symbol.category));
+function categoryLabel(id){return locale?.categories?.[id]?.toLowerCase()||categories.find(item=>item.id===id)?.label.toLowerCase();}
 const input = document.querySelector('#text-input');
 // Keep the example out of the editable value so the first keystroke replaces it.
 function previewText(){return input.value||data.example||'Make something lovely';}
@@ -39,7 +46,7 @@ let pickedItemId;
 let favorites=read('copysprig-favorites',[]);
 let recent=read('copysprig-recent',[]);
 function read(key,fallback){try{const value=JSON.parse(localStorage.getItem(key));return Array.isArray(value)?value.filter(x=>typeof x==='string').slice(0,60):fallback;}catch{return fallback;}}
-function write(key,value){try{localStorage.setItem(key,JSON.stringify(value));}catch{notify('Storage is unavailable. Copying still works.');}}
+function write(key,value){try{localStorage.setItem(key,JSON.stringify(value));}catch{notify(tx('storageUnavailable','Storage is unavailable. Copying still works.'));}}
 function notify(message){clearTimeout(toastTimer);toast.textContent=message;toastTimer=setTimeout(()=>{toast.textContent='';},3500);}
 function event(name,attributes={}){if(window.copysprigTrack)window.copysprigTrack(name,attributes);}
 // Share only the build's canonical tool URL, never visitor input or URL state.
@@ -51,9 +58,9 @@ if(shareTool){
   if(outcome==='manual'){
    const field=manual.querySelector('textarea');field.value=shareTool.dataset.url;
    manual.showModal();field.focus();field.select();
-   notify('Select the tool link and copy it.');return;
+   notify(tx('linkManual','Select the tool link and copy it.'));return;
   }
-  notify('Tool link copied. Your text is not included.');copied(shareTool);
+  notify(tx('linkCopied','Tool link copied. Your text is not included.'));copied(shareTool);
  });
 }
 function favorite(id){
@@ -68,10 +75,10 @@ function favorite(id){
   if(restoreFocus){const next=Array.from(container.querySelectorAll('[data-save]')).find(b=>b.dataset.save===nextId);(next||document.querySelector('[data-filter="saved"]'))?.focus();}
   event('favorite_toggle',{item_kind:id.startsWith('symbol:')?'symbol':'style'});
 }
-function renderFavorites(){document.querySelectorAll('[data-save]').forEach(b=>{const yes=favorites.includes(b.dataset.save);b.setAttribute('aria-pressed',String(yes));b.textContent=yes?'★':'☆';b.setAttribute('aria-label',`${yes?'Unsave':'Save'} ${b.dataset.name}`);});}
+function renderFavorites(){document.querySelectorAll('[data-save]').forEach(b=>{const yes=favorites.includes(b.dataset.save);b.setAttribute('aria-pressed',String(yes));b.textContent=yes?'★':'☆';b.setAttribute('aria-label',tx('saveLabel',`${yes?'Unsave':'Save'} ${b.dataset.name}`,yes,b.dataset.name));});}
 function record(id){recent=[id,...recent.filter(x=>x!==id)].slice(0,8);write('copysprig-recent',recent);renderShelf();}
 function copied(button){if(!button)return;clearTimeout(copiedTimers.get(button));button.dataset.copied='true';copiedTimers.set(button,setTimeout(()=>{delete button.dataset.copied;copiedTimers.delete(button);},1800));}
-async function copy(value,id,button,isCurrent=()=>true){const outcome=await copyText(value);if(outcome==='manual'){const field=manual.querySelector('textarea');field.value=value;manual.showModal();field.focus();field.select();notify('Select the text and use your device’s copy command.');return;}if(id)record(id);notify('Copied. Ready to paste.');if(isCurrent())copied(button);if(id)event('copy',{item_kind:id.startsWith('symbol:')?'symbol':'style',item_id:id.startsWith('mix:')?'style:mixed':id});}
+async function copy(value,id,button,isCurrent=()=>true){const outcome=await copyText(value);if(outcome==='manual'){const field=manual.querySelector('textarea');field.value=value;manual.showModal();field.focus();field.select();notify(tx('manualCopy','Select the text and use your device’s copy command.'));return;}if(id)record(id);notify(tx('copied','Copied. Ready to paste.'));if(isCurrent())copied(button);if(id)event('copy',{item_kind:id.startsWith('symbol:')?'symbol':'style',item_id:id.startsWith('mix:')?'style:mixed':id});}
 // Keep original characters and blank lines; Discord interprets the delimiters.
 // Existing Markdown and mentions deliberately remain visible and active.
 function discordMessage(text){return text.split(/(\r\n|[\r\n\u2028\u2029])/).map((part,index)=>index%2?part:part.replace(/^(\s*)(.*?)(\s*)$/u,(_,before,words,after)=>words?`${before}**${words}**${after}`:part)).join('');}
@@ -133,7 +140,7 @@ function card(style,text,id='style:'+style.id){
   const output=document.createElement('p');output.className='output';output.dir='auto';output.textContent=text;content.append(label,output);
   if(style.description){const note=document.createElement('p');note.className='style-note';note.textContent=style.description;content.append(note);}
   const actions=document.createElement('div');actions.className='result-actions';
-  const c=document.createElement('button');c.className='copy';c.type='button';c.textContent='Copy';c.setAttribute('aria-label','Copy '+style.label);c.disabled=!text;c.addEventListener('click',()=>copy(text,id,c));
+  const c=document.createElement('button');c.className='copy';c.type='button';c.textContent=tx('copy','Copy');c.setAttribute('aria-label',tx('copyLabel','Copy '+style.label,style.label));c.disabled=!text;c.addEventListener('click',()=>copy(text,id,c));
   const s=document.createElement('button');s.type='button';s.className='save';s.dataset.save=id;s.dataset.name=style.label;s.addEventListener('click',()=>favorite(id));
   actions.append(c,s);article.append(content,actions);enableCardCopy(article,c);return article;
 }
@@ -161,60 +168,60 @@ function renderMixer(){
 function updateCount(element,message){if(element&&element.textContent!==message)element.textContent=message;}
 function markPick(article){
   article.classList.add('is-picked');
-  const label=document.createElement('span');label.className='pick-label';label.textContent='Your pick';
+  const label=document.createElement('span');label.className='pick-label';label.textContent=tx('yourPick','Your pick');
   article.querySelector('.result-label').append(label);
 }
 function renderStyles(){
-  if(!input)return;document.querySelector('#character-count').textContent=Array.from(input.value).length+' / 500 characters';
+  if(!input)return;document.querySelector('#character-count').textContent=tx('characters',Array.from(input.value).length+' / 500 characters',Array.from(input.value).length);
   renderMessage();
   renderMixer();if(!results){renderShelf();return;}
   const value=previewText();const fragment=document.createDocumentFragment();
   let count=0;
   const appendResult=(style,text,id='style:'+style.id)=>{const result=card(style,text,id);if(id===pickedItemId)markPick(result);fragment.append(result);count++;};
-  if(data.mode==='plain'){appendResult({id:'plain',label:'Ordinary text'},plainText(value));}
+  if(data.mode==='plain'){appendResult({id:'plain',label:tx('ordinaryText','Ordinary text')},plainText(value));}
   else if(data.mode==='decorator'){
     const chosen=document.querySelector('#frame').value;
     frames.filter(f=>chosen==='all'||f[0]===chosen).forEach(([id])=>{const frame=FRAMES.find(f=>f.id===id);appendResult({id:'frame-'+id,label:frame.label+' frame'},mixText(value,{frameId:id}));});
   }else{
     const query=(styleSearch?.value||'').trim().toLowerCase();const family=styleFamily?.value||'all';
     const searchFilters={family,query,aliases:styleAliases};
-    const styles=filterStyles(data.styleIds?data.styleIds.map(id=>STYLES.find(s=>s.id===id)).filter(Boolean):STYLES,{filter,favoriteIds:favorites,...searchFilters});
+    const styles=filterStyles(data.styleIds?data.styleIds.map(id=>styleList.find(s=>s.id===id)).filter(Boolean):styleList,{filter,favoriteIds:favorites,...searchFilters});
     styles.forEach(s=>appendResult(s,transformText(value,s.id)));
     if(filter==='saved'&&!data.styleIds){for(const id of favorites){const selection=mixSelection(id);if(!selection)continue;const metadata={...mixMetadata(selection),group:STYLES.find(s=>s.id===selection.styleId)?.group||'effects'};if(!matchesStyleFilters(metadata,searchFilters))continue;appendResult(metadata,mixText(value,selection),id);}}
-    if(!count){const p=document.createElement('p');p.className='empty';p.textContent=filter==='saved'&&!query&&family==='all'?'Save a style or mix with the star button, then find it here.':'No styles match. Clear the search or choose All families and All styles.';fragment.append(p);}
+    if(!count){const p=document.createElement('p');p.className='empty';p.textContent=filter==='saved'&&!query&&family==='all'?tx('emptySavedStyles','Save a style or mix with the star button, then find it here.'):tx('noStyles','No styles match. Clear the search or choose All families and All styles.');fragment.append(p);}
   }
   results.replaceChildren(fragment);
   if(!Array.from(results.querySelectorAll('.result')).some(result=>result.dataset.itemId===pickedItemId))pickedItemId=undefined;
   const noun=data.mode==='decorator'?'frame':data.mode==='plain'?'result':'style';
-  updateCount(styleCount,`${count} ${filter==='saved'?'saved ':''}${noun}${count===1?'':'s'}`);
+  updateCount(styleCount,tx('styleCount',`${count} ${filter==='saved'?'saved ':''}${noun}${count===1?'':'s'}`,count,filter==='saved'));
   if(pickButton)pickButton.disabled=count===0;
   renderFavorites();renderShelf();
 }
 function renderSymbols(){
   if(!grid)return;
   const category=data.category||categoryFilter;
-  const candidates=filterSymbols(symbols,{query:search?.value,category,filter,favoriteIds:favorites});
+  const candidates=filterSymbols(symbolList,{query:search?.value,category,filter,favoriteIds:favorites});
   const fragment=document.createDocumentFragment();
   candidates.forEach(symbol=>{
     const article=document.createElement('article');article.className='symbol-card';
     if(wideCategories.includes(symbol.category))article.classList.add('symbol-card-wide');
     if(blankCategories.includes(symbol.category))article.classList.add('symbol-card-blank');
-    const button=document.createElement('button');button.type='button';button.className='symbol-copy';button.setAttribute('aria-label',`Copy ${symbol.name}`);
+    const button=document.createElement('button');button.type='button';button.className='symbol-copy';button.setAttribute('aria-label',tx('copyLabel',`Copy ${symbol.name}`,symbol.name));
     const glyph=document.createElement('span');glyph.className='symbol-glyph';glyph.setAttribute('aria-hidden','true');glyph.textContent=symbol.text;
     const name=document.createElement('span');name.className='symbol-name';name.textContent=symbol.name;
     button.append(glyph,name);button.addEventListener('click',()=>copy(symbol.text,`symbol:${symbol.id}`,button));
     const footer=document.createElement('div');footer.className='symbol-footer';
-    const hint=document.createElement('span');hint.textContent='Tap to copy';
+    const hint=document.createElement('span');hint.textContent=tx('tapToCopy','Tap to copy');
     const save=document.createElement('button');save.className='save';save.type='button';save.dataset.save=`symbol:${symbol.id}`;save.dataset.name=symbol.name;save.addEventListener('click',()=>favorite(save.dataset.save));
     footer.append(hint,save);article.append(button,footer);enableCardCopy(article,button);fragment.append(article);
   });
   grid.replaceChildren(fragment);
-  const categoryName=categories.find(item=>item.id===category)?.label.toLowerCase();
-  updateCount(document.querySelector('#symbol-count'),`${candidates.length} ${filter==='saved'?'saved ':''}${candidates.length===1?'symbol':'symbols'}${categoryName?` in ${categoryName}`:''}`);
+  const categoryName=categoryLabel(category);
+  updateCount(document.querySelector('#symbol-count'),tx('symbolCount',`${candidates.length} ${filter==='saved'?'saved ':''}${candidates.length===1?'symbol':'symbols'}${categoryName?` in ${categoryName}`:''}`,candidates.length,filter==='saved',categoryName));
   const empty=document.querySelector('#symbol-empty');empty.hidden=candidates.length>0;
   const message=document.querySelector('#symbol-empty-message')||empty;
   const scope=categoryName?` in ${categoryName}`:'';
-  const guidance=filter==='saved'?`No saved matches${scope}. Reset filters to see the collection, then star a favorite.`:`No matches${scope}. Try a shorter word or reset your search${!data.category?' and collection':''}.`;
+  const guidance=tx('noMatches',filter==='saved'?`No saved matches${scope}. Reset filters to see the collection, then star a favorite.`:`No matches${scope}. Try a shorter word or reset your search${!data.category?' and collection':''}.`,filter==='saved',categoryName,Boolean(data.category));
   if(message.textContent!==guidance)message.textContent=guidance;
   renderFavorites();
 }
@@ -231,11 +238,11 @@ pickButton?.addEventListener('click',()=>{
   const button=pick.article.querySelector('.copy');button.focus({preventScroll:true});
   const reduceMotion=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   pick.article.scrollIntoView({behavior:reduceMotion?'instant':'smooth',block:'nearest'});
-  notify(`Your pick: ${pick.article.querySelector('[data-save]').dataset.name}. Ready to copy.`);
+  notify(tx('pickReady',`Your pick: ${pick.article.querySelector('[data-save]').dataset.name}. Ready to copy.`,pick.article.querySelector('[data-save]').dataset.name));
 });
 function shelfItem(id){
   const [kind,key]=id.split(':');
-  if(kind==='symbol'){const s=symbols.find(x=>x.id===key);if(!s)return;const b=document.createElement('button');b.className='shelf-item';b.dataset.itemId=id;b.type='button';b.textContent=s.text;b.setAttribute('aria-label',`Copy ${s.name}`);b.addEventListener('click',()=>copy(s.text,id,b));return b;}
+  if(kind==='symbol'){const s=symbolList.find(x=>x.id===key)||symbols.find(x=>x.id===key);if(!s)return;const b=document.createElement('button');b.className='shelf-item';b.dataset.itemId=id;b.type='button';b.textContent=s.text;b.setAttribute('aria-label',tx('copyLabel',`Copy ${s.name}`,s.name));b.addEventListener('click',()=>copy(s.text,id,b));return b;}
   if(kind==='mix'){
     const selection=mixSelection(id);if(!selection)return;const s=mixMetadata(selection);
     const copiesHere=input&&['styles','mixer'].includes(data.mode);const b=document.createElement(copiesHere?'button':'a');
@@ -244,9 +251,9 @@ function shelfItem(id){
     else b.href='/style-mixer/#'+id;
     return b;
   }
-  if(kind==='style'){const special=key==='plain'?{id:key,label:'Ordinary text',href:'/plain-text/'}:key.startsWith('frame-')?{id:key,label:`${key.slice(6)} frame`,href:'/text-decorator/'}:null;const s=STYLES.find(x=>x.id===key)||special;if(!s)return;const copiesHere=input&&['styles','mixer'].includes(data.mode)&&(!data.styleIds||data.styleIds.includes(s.id))&&!special;const b=document.createElement(copiesHere?'button':'a');b.className='shelf-item';b.dataset.itemId=id;b.textContent=s.label;if(copiesHere){b.type='button';b.setAttribute('aria-label',`Copy ${s.label}`);b.addEventListener('click',()=>copy(transformText(previewText(),s.id),id,b));}else b.href=s.href||`/#style-${s.id}`;return b;}
+  if(kind==='style'){const special=key==='plain'?{id:key,label:'Ordinary text',href:'/plain-text/'}:key.startsWith('frame-')?{id:key,label:`${key.slice(6)} frame`,href:'/text-decorator/'}:null;const s=styleList.find(x=>x.id===key)||special;if(!s)return;const copiesHere=input&&['styles','mixer'].includes(data.mode)&&(!data.styleIds||data.styleIds.includes(s.id))&&!special;const b=document.createElement(copiesHere?'button':'a');b.className='shelf-item';b.dataset.itemId=id;b.textContent=s.label;if(copiesHere){b.type='button';b.setAttribute('aria-label',tx('copyLabel',`Copy ${s.label}`,s.label));b.addEventListener('click',()=>copy(transformText(previewText(),s.id),id,b));}else b.href=s.href||`/#style-${s.id}`;return b;}
 }
-function renderShelf(){for(const [id,list]of [['saved-list',favorites],['recent-list',recent]]){const el=document.querySelector(`#${id}`);if(!el)continue;const previous=new Map(Array.from(el.children,b=>[b.dataset.itemId,b]));const nodes=list.map(id=>previous.get(id)||shelfItem(id)).filter(Boolean);nodes.forEach(node=>{if(node.tagName==='BUTTON'&&node.dataset.itemId.startsWith('style:'))node.disabled=!input||!previewText();});if(id==='saved-list'&&collectionCount)collectionCount.textContent=`${nodes.length} saved`;if(!nodes.length){const p=document.createElement('p');p.textContent=id==='saved-list'?'Use a star to save a style or symbol.':'Your copied styles and symbols appear here.';el.replaceChildren(p);}else if(nodes.length!==el.children.length||nodes.some((node,i)=>node!==el.children[i]))el.replaceChildren(...nodes);}}
+function renderShelf(){for(const [id,list]of [['saved-list',favorites],['recent-list',recent]]){const el=document.querySelector(`#${id}`);if(!el)continue;const previous=new Map(Array.from(el.children,b=>[b.dataset.itemId,b]));const nodes=list.map(id=>previous.get(id)||shelfItem(id)).filter(Boolean);nodes.forEach(node=>{if(node.tagName==='BUTTON'&&node.dataset.itemId.startsWith('style:'))node.disabled=!input||!previewText();});if(id==='saved-list'&&collectionCount)collectionCount.textContent=tx('savedCount',`${nodes.length} saved`,nodes.length);if(!nodes.length){const p=document.createElement('p');p.textContent=id==='saved-list'?tx('shelfEmptySaved','Use a star to save a style or symbol.'):tx('shelfEmptyRecent','Your copied styles and symbols appear here.');el.replaceChildren(p);}else if(nodes.length!==el.children.length||nodes.some((node,i)=>node!==el.children[i]))el.replaceChildren(...nodes);}}
 input?.addEventListener('input',()=>{clearExampleSelection();renderStyles();});
 styleSearch?.addEventListener('input',renderStyles);
 styleFamily?.addEventListener('change',renderStyles);
@@ -258,8 +265,8 @@ if(location.hash==='#style-mixer')openMixer();
 document.querySelectorAll('a[href="#style-mixer"]').forEach(link=>link.addEventListener('click',openMixer));
 search?.addEventListener('input',renderSymbols);
 document.querySelector('#frame')?.addEventListener('change',renderStyles);
-document.querySelector('#clear-history')?.addEventListener('click',()=>{recent=[];write('copysprig-recent',recent);renderShelf();notify('Recent selections cleared.');});
-document.querySelector('#clear-favorites')?.addEventListener('click',()=>{favorites=[];write('copysprig-favorites',favorites);renderShelf();renderFavorites();if(grid)renderSymbols();if(results)renderStyles();notify('Saved selections cleared.');});
+document.querySelector('#clear-history')?.addEventListener('click',()=>{recent=[];write('copysprig-recent',recent);renderShelf();notify(tx('recentCleared','Recent selections cleared.'));});
+document.querySelector('#clear-favorites')?.addEventListener('click',()=>{favorites=[];write('copysprig-favorites',favorites);renderShelf();renderFavorites();if(grid)renderSymbols();if(results)renderStyles();notify(tx('savedCleared','Saved selections cleared.'));});
 document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{filter=button.dataset.filter;syncFilters();if(results)renderStyles();if(grid)renderSymbols();}));
 document.querySelectorAll('[data-category-filter]').forEach(button=>button.addEventListener('click',()=>{categoryFilter=button.dataset.categoryFilter;syncFilters();renderSymbols();}));
 document.querySelector('#reset-symbols')?.addEventListener('click',()=>{if(search)search.value='';filter='all';categoryFilter='all';syncFilters();renderSymbols();search?.focus();});

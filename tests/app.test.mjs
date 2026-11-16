@@ -6,12 +6,13 @@ import { runInNewContext } from 'node:vm';
 import * as unicode from '../src/unicode.mjs';
 import { symbols, categories, wideCategories, blankCategories } from '../src/catalog.mjs';
 import * as discovery from '../src/discovery.mjs';
+import { i18n } from '../src/i18n.mjs';
 
 // Exercise the app's event wiring without a browser, network, or clipboard.
 // The real transformation exports are used; copyText is the external boundary.
 const source = (await readFile(new URL('../src/app.mjs', import.meta.url), 'utf8')).replace(/^import .+;\r?\n/gm, '');
 
-function environment({ mode = 'styles', category, styleIds, useCases = [], message = false, favorites = [], hash = '', copyOutcome = 'clipboard', copyWait, reduceMotion = false } = {}) {
+function environment({ mode = 'styles', category, styleIds, useCases = [], message = false, favorites = [], hash = '', copyOutcome = 'clipboard', copyWait, reduceMotion = false, lang, categories: pageCategories } = {}) {
   const writes = [];
   const copied = [];
   const tracked = [];
@@ -133,7 +134,7 @@ function environment({ mode = 'styles', category, styleIds, useCases = [], messa
     parent.append(node);
     return node;
   }
-  element('page-data').textContent = JSON.stringify({ mode, category, styleIds, useCases, example: 'Make something lovely' });
+  element('page-data').textContent = JSON.stringify({ mode, category, styleIds, useCases, example: 'Make something lovely', lang, categories: pageCategories });
   element('toast');
   element('share-tool', 'button').dataset.url = 'https://copysprig.com/bold-text/';
   element('saved-list');
@@ -203,7 +204,7 @@ function environment({ mode = 'styles', category, styleIds, useCases = [], messa
     matchMedia: () => ({ matches: reduceMotion }),
   };
   runInNewContext(source, {
-    ...unicode, ...discovery, symbols, categories, wideCategories, blankCategories, window, document, location,
+    ...unicode, ...discovery, symbols, categories, wideCategories, blankCategories, i18n, window, document, location,
     localStorage: {
       getItem: key => stored.get(key) ?? null,
       setItem: (key, value) => { writes.push({ key, value }); stored.set(key, value); },
@@ -701,4 +702,26 @@ test('a symbol footer opens exact manual-copy text when the clipboard is unavail
   assert.equal(env.stored.has('copysprig-recent'), false);
   assert.equal(env.tracked.length, 0);
   assert.match(env.get('#toast').textContent, /Select the text/);
+});
+
+test('localized pages show Spanish and Portuguese labels, counts and symbol names without changing copied text', async () => {
+  const es = environment({ styleIds: ['bold', 'script'], lang: 'es' });
+  const cards = es.get('#results').querySelectorAll('.result');
+  assert.equal(cards.length, 2);
+  assert.match(cards[0].textContent, /Negrita/);
+  assert.match(cards[1].textContent, /Cursiva/);
+  assert.equal(cards[0].querySelector('.copy').textContent, 'Copiar');
+  assert.equal(es.get('#style-count').textContent, '2 estilos');
+  await es.set('text-input', 'Hola', 'input');
+  await es.get('#results').querySelectorAll('.copy')[0].click();
+  await settleCopy();
+  assert.equal(es.copied.at(-1), unicode.transformText('Hola', 'bold'));
+  assert.equal(es.get('#toast').textContent, 'Copiado. Listo para pegar.');
+
+  const pt = environment({ mode: 'symbols', lang: 'pt', categories: ['heart', 'invisible'] });
+  assert.equal(pt.get('#symbol-grid').children.length, 20);
+  assert.match(pt.get('#symbol-grid').children[0].textContent, /Coração branco/);
+  await pt.set('symbol-search', 'coração', 'input');
+  assert.equal(pt.get('#symbol-grid').children.length, 10);
+  assert.match(pt.get('#symbol-count').textContent, /^10 símbolos/);
 });

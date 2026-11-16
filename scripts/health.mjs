@@ -68,7 +68,7 @@ async function pool(items, fn) {
 let routes = [];
 try {
   routes = JSON.parse(await readFile(resolve(root, 'routes.json'), 'utf8'));
-  if (!Array.isArray(routes) || routes.length === 0 || routes.some(route => typeof route.path !== 'string' || !/^\/(?:[a-z0-9-]+\/)?$/.test(route.path)) || new Set(routes.map(route => route.path)).size !== routes.length) throw new Error('Route manifest is missing, empty, duplicated, or invalid. Run npm run build.');
+  if (!Array.isArray(routes) || routes.length === 0 || routes.some(route => typeof route.path !== 'string' || !/^\/(?:[a-z0-9-]+\/)*$/.test(route.path)) || new Set(routes.map(route => route.path)).size !== routes.length) throw new Error('Route manifest is missing, empty, duplicated, or invalid. Run npm run build.');
   record('route-manifest', true, `${routes.length} indexable routes`);
   const titles = new Map();
   await pool(routes, async route => {
