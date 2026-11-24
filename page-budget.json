@@ -1,0 +1,5 @@
+{
+  "maxPages": 95,
+  "updatedAt": "2026-11-24",
+  "note": "Ceiling on canonical pages (routes.json), enforced by npm run check. The weekly search health job raises it by 10 only while Google indexes nearly everything it crawls (under 10% 'Crawled - currently not indexed') and the site is within 5 pages of the ceiling. This keeps growth at a pace Google absorbs; whogoesfirst.fun lost most of its search traffic in October 2026 after adding about 1,350 templated pages in a week."
+}

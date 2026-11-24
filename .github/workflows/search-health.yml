@@ -1,0 +1,50 @@
+name: Search health
+# Weekly Search Console check: alerts arrive as a GitHub issue labelled search-health,
+# and page-budget.json grows only while Google keeps indexing new pages.
+on:
+  schedule:
+    - cron: '23 7 * * 1,4' # Mondays and Thursdays
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+concurrency:
+  group: copysprig-search-health
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+      - id: health
+        run: node scripts/search-health.mjs
+        env:
+          # The deploy service account also holds Restricted (read-only) Search Console access.
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_COPYSPRIG }}
+      - name: Raise or resolve the search health issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ALERTS: ${{ steps.health.outputs.alerts }}
+        run: |
+          gh label create search-health --color B60205 --description "Automated search health alerts" 2>/dev/null || true
+          open=$(gh issue list --label search-health --state open --json number --jq '.[0].number')
+          if [ "${ALERTS:-0}" -gt 0 ]; then
+            if [ -n "$open" ]; then gh issue comment "$open" --body-file metrics/search-health.md
+            else gh issue create --title "CopySprig search health needs attention" --label search-health --body-file metrics/search-health.md; fi
+          elif [ -n "$open" ]; then
+            gh issue close "$open" --comment "Resolved: the latest check found no alerts."
+          fi
+      # Data only; [skip ci] keeps it from triggering a deploy.
+      - name: Commit health data and page budget
+        run: |
+          git add metrics/search-health.md metrics/search-health.json page-budget.json
+          if git diff --cached --quiet; then echo "No changes."; exit 0; fi
+          git config user.name "growth-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Update search health [skip ci]"
+          git pull --rebase
+          git push

@@ -28,6 +28,10 @@ async function files(directory) {
 
 ensure(new URL(config.siteUrl).protocol === 'https:', 'Production site URL must use HTTPS.');
 ensure(routes.length >= 16, 'Expected the finished route catalog, not an incomplete build.');
+// Page-growth guardrail: page-budget.json caps canonical pages. The weekly search health job raises it
+// only while Google keeps indexing new pages, so growth stays at a pace Google absorbs.
+const budget = JSON.parse(await readFile(resolve(root, 'page-budget.json'), 'utf8'));
+ensure(Number.isInteger(budget.maxPages) && routes.length <= budget.maxPages, `The site has ${routes.length} pages, above the ${budget.maxPages}-page budget in page-budget.json. The weekly search health job raises the budget while indexing stays healthy; publish the extra pages after that.`);
 ensure(new Set(routes.map((route) => route.path)).size === routes.length, 'Route paths must be unique.');
 const titles = new Set();
 const descriptions = new Set();

@@ -11,3 +11,5 @@ For a visible change, inspect the rendered result at desktop and narrow mobile w
 After necessary verification passes, commit and push to `main` to deploy immediately, as the user has authorized. Confirm the actual deployment and live behavior. A local fix alone is incomplete; report a concrete deployment blocker if one exists.
 
 Make ongoing changes for observed usability defects or evidence-backed improvements. Preserve dated evidence and avoid cosmetic churn just to produce activity.
+
+Page growth is capped by `page-budget.json`, which `npm run check` enforces. The weekly Search health workflow raises it by 10 only while Google indexes nearly everything it crawls; do not raise it by hand to publish a batch of pages. Its report is `metrics/search-health.md`, and alerts open a GitHub issue labelled `search-health`.
