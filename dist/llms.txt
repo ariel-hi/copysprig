@@ -1,6 +1,6 @@
 # CopySprig
 
-> Free fancy text generator and copy-and-paste symbol library. Type once to get 37 Unicode text styles (bold, italic, cursive, gothic, bubble, tiny, glitch, Zalgo, mirror and more), app-specific font pages, and 263 named symbols, kaomoji and invisible characters. Text is transformed in the browser; nothing is uploaded and no signup is needed.
+> Free fancy text generator and copy-and-paste symbol library. Type once to get 37 Unicode text styles (bold, italic, cursive, gothic, bubble, tiny, glitch, Zalgo, mirror and more), app-specific font pages, and 324 named symbols, kaomoji and invisible characters. Text is transformed in the browser; nothing is uploaded and no signup is needed.
 
 ## Text generators
 
@@ -39,13 +39,13 @@
 ## Symbols to copy and paste
 
 - [Symbols to copy and paste](https://copysprig.com/symbols/): Cool symbols to copy and paste: hearts, stars, arrows, flowers, moons, brackets, music notes and kaomoji. Search by name and copy in one tap.
-- [Heart symbols to copy and paste](https://copysprig.com/heart-symbols/): Heart symbols to copy and paste: outline ♡, filled ♥ and decorative ❤ hearts for bios, sign-offs and captions. Tap any heart to copy it.
+- [Heart symbols and emoji to copy and paste](https://copysprig.com/heart-symbols/): Heart symbols and emoji to copy and paste: ♡ ♥ text hearts, ❤️ 🩷 💙 hearts in every color, and cute combos like ʚ♡ɞ for bios and messages.
 - [Star symbols to copy and paste](https://copysprig.com/star-symbols/): Star and sparkle symbols to copy and paste: outline ☆, bold ★ and sparkle ✦ marks for highlights, bios and captions. Tap a star to copy.
 - [Arrow symbols to copy and paste](https://copysprig.com/arrow-symbols/): Arrow symbols to copy and paste: right →, heavy ➜, down ↓ and decorative arrows for link labels, bios and short directions. Tap to copy.
 - [Flower symbols to copy and paste](https://copysprig.com/flower-symbols/): Flower symbols to copy and paste: ✿ ❀ ❁ and other floral marks for gentle dividers, signatures and nature-themed bios. Tap one to copy.
 - [Moon & sky symbols to copy and paste](https://copysprig.com/moon-symbols/): Moon and sky symbols to copy and paste: crescents ☾, sun marks ☀, tiny stars ⋆ and moon phases for night-sky bios. Tap any to copy.
 - [Bracket symbols to copy and paste](https://copysprig.com/bracket-symbols/): Decorative bracket symbols to copy and paste: 【】, 「」, 『』 and more matching pairs for framing names, titles and profile labels.
-- [Music note symbols to copy and paste](https://copysprig.com/music-symbols/): Music note symbols to copy and paste: ♪ ♫ ♬ and other musical marks for playlist titles, artist bios and music captions. Tap to copy.
+- [Music note symbols to copy and paste](https://copysprig.com/music-symbols/): Music note symbols to copy and paste: ♪ ♫ ♬ notes, 𝄞 clefs, ♯ ♭ signs, instrument emoji and aesthetic music player combos ⇆ ◁ ❚❚ ▷ ↻.
 - [Text dividers to copy and paste](https://copysprig.com/dividers/): Aesthetic text dividers to copy and paste: short ─ ✦ ─ lines and ornaments that separate bio sections and captions without an image.
 - [Kaomoji text faces to copy and paste](https://copysprig.com/kaomoji/): Kaomoji to copy and paste: Japanese text faces like (◕‿◕) grouped by mood, from happy and grateful to calm and surprised. Tap to copy.
 - [Check mark symbols to copy and paste](https://copysprig.com/check-mark-symbols/): Check mark symbols to copy and paste: ✓ ✔ ☑ ✅ ticks, ✗ ✘ ❌ crosses and ☐ ballot boxes for to-do lists, polls and status updates. Tap to copy.
@@ -80,7 +80,7 @@
 - [Letras para WhatsApp: Cursiva y Burbuja ⓦ](https://copysprig.com/es/letras-para-whatsapp/): Letras para WhatsApp: copia y pega letras cursivas, de burbuja y negritas para mensajes, estados e Info, más los códigos de formato propios de WhatsApp.
 - [Letras para Nick de Juegos: 𝕹𝖎𝖈𝖐 ♛](https://copysprig.com/es/letras-para-nick/): Letras para nick de Free Fire, Roblox, Fortnite y otros juegos: letras góticas, de doble trazo, en cuadros y burbujas para copiar y pegar, más símbolos.
 - [Símbolos para Copiar y Pegar: ♡ ✦ ♛ ✓ Gratis](https://copysprig.com/es/simbolos/): Símbolos para copiar y pegar: corazones, estrellas, coronas, marcas de verificación y caracteres invisibles para tu nick, tu biografía o tus mensajes.
-- [Símbolos de Corazón ♡ ♥ ❤ para Copiar y Pegar](https://copysprig.com/es/simbolos-de-corazon/): Símbolos de corazón para copiar y pegar: corazón blanco ♡, negro ♥ y decorativo ❤ para tu biografía, tus mensajes y tus pies de foto. Toca para copiar.
+- [Símbolos de Corazón ♡ ♥ ❤ para Copiar y Pegar](https://copysprig.com/es/simbolos-de-corazon/): Símbolos de corazón para copiar y pegar: corazones de texto ♡ ♥, emoji ❤️ 🩷 💙 de todos los colores y combinaciones tiernas como ʚ♡ɞ para tu biografía.
 - [Símbolos de Estrella ☆ ★ ✦ para Copiar y Pegar](https://copysprig.com/es/simbolos-de-estrella/): Símbolos de estrella para copiar y pegar: estrella blanca ☆, negra ★, destellos ✦ y más para resaltar tu nick, tu biografía o tus mensajes. Toca para copiar.
 - [Carácter Invisible: Copiar Texto en Blanco ㅤ](https://copysprig.com/es/caracter-invisible/): Copia un carácter invisible o letra en blanco con un toque: relleno hangul, braille en blanco y espacio de ancho cero para nombres vacíos y saltos de línea.
 
@@ -98,6 +98,6 @@
 - [Letras para WhatsApp: Cursiva e Bolha ⓦ](https://copysprig.com/pt/letras-para-whatsapp/): Letras para WhatsApp: copie e cole letras cursivas, de bolha e em negrito para mensagens, status e recado, além dos códigos de formatação do próprio WhatsApp.
 - [Letras para Nick de Jogos: 𝕹𝖎𝖈𝖐 ♛](https://copysprig.com/pt/letras-para-nick/): Letras para nick de Free Fire, Roblox, Fortnite e outros jogos: letras góticas, de contorno duplo, em quadrados e bolhas para copiar e colar, mais símbolos.
 - [Símbolos para Copiar e Colar: ♡ ✦ ♛ ✓ Grátis](https://copysprig.com/pt/simbolos/): Símbolos para copiar e colar: corações, estrelas, coroas, sinais de visto e caracteres invisíveis para seu nick, sua bio ou suas mensagens. Toque para copiar.
-- [Símbolos de Coração ♡ ♥ ❤ para Copiar e Colar](https://copysprig.com/pt/simbolos-de-coracao/): Símbolos de coração para copiar e colar: coração branco ♡, preto ♥ e decorativo ❤ para a bio, mensagens e legendas. Toque em qualquer coração para copiar.
+- [Símbolos de Coração ♡ ♥ ❤ para Copiar e Colar](https://copysprig.com/pt/simbolos-de-coracao/): Símbolos de coração para copiar e colar: corações de texto ♡ ♥, emoji ❤️ 🩷 💙 de todas as cores e combinações fofas como ʚ♡ɞ para a sua bio e mensagens.
 - [Símbolos de Estrela ☆ ★ ✦ para Copiar e Colar](https://copysprig.com/pt/simbolos-de-estrela/): Símbolos de estrela para copiar e colar: estrela branca ☆, preta ★, brilhos ✦ e mais para destacar seu nick, sua bio ou suas mensagens. Toque para copiar.
 - [Caractere Invisível: Copiar Texto em Branco ㅤ](https://copysprig.com/pt/caractere-invisivel/): Copie um caractere invisível ou letra em branco com um toque: preenchimento hangul, braille em branco e espaço zero para nomes vazios e quebras de linha.

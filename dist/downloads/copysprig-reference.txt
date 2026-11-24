@@ -14,6 +14,41 @@ HEARTS
 💜  —  Purple heart
 🤍  —  White heart emoji
 🖤  —  Black heart emoji
+❤️  —  Red heart emoji
+🩷  —  Pink heart emoji
+🧡  —  Orange heart emoji
+💛  —  Yellow heart emoji
+💚  —  Green heart emoji
+🩵  —  Light blue heart emoji
+💙  —  Blue heart emoji
+🤎  —  Brown heart emoji
+🩶  —  Grey heart emoji
+💔  —  Broken heart emoji
+💕  —  Two hearts emoji
+💞  —  Revolving hearts emoji
+💓  —  Beating heart emoji
+💖  —  Sparkling heart emoji
+💘  —  Heart with arrow emoji
+💝  —  Heart with ribbon emoji
+💟  —  Heart decoration emoji
+❤️‍🔥  —  Heart on fire emoji
+❤️‍🩹  —  Mending heart emoji
+🫶  —  Heart hands emoji
+🥰  —  Smiling face with hearts
+😍  —  Heart eyes emoji
+💌  —  Love letter emoji
+❦  —  Floral heart
+❧  —  Rotated floral heart bullet
+ᥫ᭡  —  Aesthetic heart
+<3  —  Text heart
+ʚ♡ɞ  —  Winged heart
+꒰ ♡ ꒱  —  Heart in soft brackets
+𓆩♡𓆪  —  Heart in hieroglyph brackets
+₊˚⊹♡  —  Sparkle heart
+♡♡♡  —  Three hearts
+♥‿♥  —  Heart eyes text face
+ღ˘⌣˘ღ  —  Love face
+˚₊‧꒰ა ♡ ໒꒱ ‧₊˚  —  Cute heart frame
 
 STARS
 ☆  —  White star
@@ -113,6 +148,32 @@ MUSIC
 𝄢  —  Musical symbol F clef
 🎵  —  Musical note emoji
 🎶  —  Multiple musical notes
+𝅗𝅥  —  Half note
+𝅘𝅥  —  Quarter note symbol
+𝅘𝅥𝅮  —  Eighth note symbol
+𝄡  —  Musical symbol C clef
+𝄪  —  Double sharp
+𝄫  —  Double flat
+𝄐  —  Fermata
+𝄽  —  Quarter rest
+𝄆  —  Left repeat sign
+𝄇  —  Right repeat sign
+🎼  —  Musical score emoji
+🎧  —  Headphones emoji
+🎤  —  Microphone emoji
+🎹  —  Piano keyboard emoji
+🎸  —  Guitar emoji
+🎻  —  Violin emoji
+🎷  —  Saxophone emoji
+🎺  —  Trumpet emoji
+🥁  —  Drum emoji
+💿  —  CD emoji
+♬♩♪♩  —  Note run
+♪♫•*¨*•.¸¸♪  —  Music sparkle line
+ılıılıılıılı  —  Sound bars
+⇆ㅤ◁ㅤ❚❚ㅤ▷ㅤ↻  —  Music player controls
+0:35 ━❍──────── -3:12  —  Song progress bar
+▶︎ •၊၊||၊|။||||။၊|• 0:10  —  Voice note wave
 
 DIVIDERS
 ─ ✦ ─  —  Four point star divider

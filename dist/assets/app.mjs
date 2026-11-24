@@ -1,8 +1,8 @@
-import {STYLES,EFFECTS,FRAMES,transformText,plainText,mixText} from './unicode.mjs?v=b210eabbf322';
-import {symbols,categories,wideCategories,blankCategories} from './catalog.mjs?v=b210eabbf322';
-import {copyText} from './copy.mjs?v=b210eabbf322';
-import {i18n} from './i18n.mjs?v=b210eabbf322';
-import {filterStyles,matchesStyleFilters,filterSymbols,pickItem} from './discovery.mjs?v=b210eabbf322';
+import {STYLES,EFFECTS,FRAMES,transformText,plainText,mixText} from './unicode.mjs?v=7a672b8647a9';
+import {symbols,categories,wideCategories,blankCategories,isWideSymbol} from './catalog.mjs?v=7a672b8647a9';
+import {copyText} from './copy.mjs?v=7a672b8647a9';
+import {i18n} from './i18n.mjs?v=7a672b8647a9';
+import {filterStyles,matchesStyleFilters,filterSymbols,pickItem} from './discovery.mjs?v=7a672b8647a9';
 const data = JSON.parse(document.querySelector('#page-data').textContent);
 // Localized pages set data.lang; English strings below are the fallback.
 const locale = data.lang && i18n[data.lang] ? i18n[data.lang] : null;
@@ -204,7 +204,7 @@ function renderSymbols(){
   const fragment=document.createDocumentFragment();
   candidates.forEach(symbol=>{
     const article=document.createElement('article');article.className='symbol-card';
-    if(wideCategories.includes(symbol.category))article.classList.add('symbol-card-wide');
+    if(isWideSymbol(symbol))article.classList.add('symbol-card-wide');
     if(blankCategories.includes(symbol.category))article.classList.add('symbol-card-blank');
     const button=document.createElement('button');button.type='button';button.className='symbol-copy';button.setAttribute('aria-label',tx('copyLabel',`Copy ${symbol.name}`,symbol.name));
     const glyph=document.createElement('span');glyph.className='symbol-glyph';glyph.setAttribute('aria-hidden','true');glyph.textContent=symbol.text;

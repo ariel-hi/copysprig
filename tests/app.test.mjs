@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { setImmediate as settleCopy } from 'node:timers/promises';
 import { runInNewContext } from 'node:vm';
 import * as unicode from '../src/unicode.mjs';
-import { symbols, categories, wideCategories, blankCategories } from '../src/catalog.mjs';
+import { symbols, categories, wideCategories, blankCategories, isWideSymbol } from '../src/catalog.mjs';
 import * as discovery from '../src/discovery.mjs';
 import { i18n } from '../src/i18n.mjs';
 
@@ -204,7 +204,7 @@ function environment({ mode = 'styles', category, styleIds, useCases = [], messa
     matchMedia: () => ({ matches: reduceMotion }),
   };
   runInNewContext(source, {
-    ...unicode, ...discovery, symbols, categories, wideCategories, blankCategories, i18n, window, document, location,
+    ...unicode, ...discovery, symbols, categories, wideCategories, blankCategories, isWideSymbol, i18n, window, document, location,
     localStorage: {
       getItem: key => stored.get(key) ?? null,
       setItem: (key, value) => { writes.push({ key, value }); stored.set(key, value); },
@@ -572,7 +572,7 @@ test('style and mixer live counts are not rewritten when editing preserves their
 
 test('symbol search, saved filtering and category chips reset together without recording search words', async () => {
   const env = environment({ mode: 'symbols', favorites: ['symbol:star-0'] });
-  assert.equal(env.get('#symbol-grid').querySelectorAll('.symbol-card-wide').length, symbols.filter(item => wideCategories.includes(item.category)).length);
+  assert.equal(env.get('#symbol-grid').querySelectorAll('.symbol-card-wide').length, symbols.filter(isWideSymbol).length);
   await env.set('symbol-search', 'stars', 'input');
   assert.equal(env.get('#symbol-grid').children.length, categories.find(item => item.id === 'star').items.length);
   await env.get('#filter-saved').click();
@@ -719,9 +719,12 @@ test('localized pages show Spanish and Portuguese labels, counts and symbol name
   assert.equal(es.get('#toast').textContent, 'Copiado. Listo para pegar.');
 
   const pt = environment({ mode: 'symbols', lang: 'pt', categories: ['heart', 'invisible'] });
-  assert.equal(pt.get('#symbol-grid').children.length, 20);
+  const ptTotal = symbols.filter(item => ['heart', 'invisible'].includes(item.category)).length;
+  assert.equal(pt.get('#symbol-grid').children.length, ptTotal);
   assert.match(pt.get('#symbol-grid').children[0].textContent, /Coração branco/);
   await pt.set('symbol-search', 'coração', 'input');
-  assert.equal(pt.get('#symbol-grid').children.length, 10);
-  assert.match(pt.get('#symbol-count').textContent, /^10 símbolos/);
+  const found = pt.get('#symbol-grid').children;
+  assert.ok(found.length >= 10 && found.length < ptTotal);
+  assert.ok(found.every(card => /cora[çc][ãa]o/i.test(card.textContent)));
+  assert.match(pt.get('#symbol-count').textContent, new RegExp(`^${found.length} símbolos`));
 });

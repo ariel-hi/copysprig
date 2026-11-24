@@ -1,5 +1,5 @@
 import {STYLES,EFFECTS,FRAMES,transformText,plainText,mixText} from './unicode.mjs';
-import {symbols,categories,wideCategories,blankCategories} from './catalog.mjs';
+import {symbols,categories,wideCategories,blankCategories,isWideSymbol} from './catalog.mjs';
 import {copyText} from './copy.mjs';
 import {i18n} from './i18n.mjs';
 import {filterStyles,matchesStyleFilters,filterSymbols,pickItem} from './discovery.mjs';
@@ -204,7 +204,7 @@ function renderSymbols(){
   const fragment=document.createDocumentFragment();
   candidates.forEach(symbol=>{
     const article=document.createElement('article');article.className='symbol-card';
-    if(wideCategories.includes(symbol.category))article.classList.add('symbol-card-wide');
+    if(isWideSymbol(symbol))article.classList.add('symbol-card-wide');
     if(blankCategories.includes(symbol.category))article.classList.add('symbol-card-blank');
     const button=document.createElement('button');button.type='button';button.className='symbol-copy';button.setAttribute('aria-label',tx('copyLabel',`Copy ${symbol.name}`,symbol.name));
     const glyph=document.createElement('span');glyph.className='symbol-glyph';glyph.setAttribute('aria-hidden','true');glyph.textContent=symbol.text;
