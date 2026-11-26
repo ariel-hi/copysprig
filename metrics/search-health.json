@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-24T18:24:10.991Z",
+  "checkedAt": "2026-11-26T07:29:07.084Z",
   "indexed": {
     "/": true,
     "/bold-text/": true,
@@ -92,6 +92,11 @@
       "end": "2026-11-21",
       "impressions": 948,
       "clicks": 2
+    },
+    {
+      "end": "2026-11-23",
+      "impressions": 965,
+      "clicks": 0
     }
   ]
 }
